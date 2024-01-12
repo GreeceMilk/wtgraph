@@ -1,6 +1,4 @@
-# catbook-react
-
-## start up
+# wtgraph
 
 run `npm start` in one terminal and `npm run hotloader` in another
 
