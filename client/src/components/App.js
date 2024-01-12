@@ -40,14 +40,15 @@ const App = () => {
   return (
     // <> is like a <div>, but won't show
     // up in the DOM tree
+    // TODO: add userID in the future
     <>
       <NavBar handleLogin={handleLogin} handleLogout={handleLogout} userId={userId} />
       <div className="App-container">
         <Router>
-          <Feed path="/" userId={userId} />
-          <Profile path="/profile/:userId" />
-          <Chatbook path="/chat/" userId={userId} />
-          <Game path="/game/" userId={userId} />
+          <Landing path="/" />
+          <Graph path="/graph/" />
+          <PriceTracker path="/price/" />
+          <Profile path="/profile/" />
           <NotFound default />
         </Router>
       </div>
