@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Router } from "@reach/router";
 import { get, post } from "../utilities";
 
-// to use styles, import the necessary CSS files
 import "../utilities.css";
 import "./App.css";
 
@@ -10,7 +9,7 @@ import "./App.css";
  * Define the "App" component as a function.
  */
 const App = () => {
-  const [userId, setUserId] = useState(null);
+  // const [userId, setUserId] = useState(null);
 
   // useEffect(() => {
   //   get("/api/whoami").then((user) => {
@@ -42,7 +41,7 @@ const App = () => {
     // up in the DOM tree
     // TODO: add userID in the future
     <>
-      <NavBar handleLogin={handleLogin} handleLogout={handleLogout} userId={userId} />
+      <NavBar />
       <div className="App-container">
         <Router>
           <Landing path="/" />
