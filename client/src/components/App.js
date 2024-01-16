@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Router } from "@reach/router";
 import { get, post } from "../utilities";
+import NavBar from "./modules/Navbar.js";
+import Landing from "./pages/Landing.js";
+import NotFound from "./pages/NotFound.js";
+import Graph from "./pages/Graph.js";
+import Profile from "./pages/Profile.js";
 
 import "../utilities.css";
 import "./App.css";
@@ -34,13 +39,12 @@ const App = () => {
   //   post("/api/logout");
   // };
 
-  // required method: whatever is returned defines what
-  // shows up on screen
+  // <> is like a <div>, but won't show
+  // up in the DOM tree
+  // TODO: add userID in the future
   return (
-    // <> is like a <div>, but won't show
-    // up in the DOM tree
-    // TODO: add userID in the future
     <>
+      <p>Hello</p>
       <NavBar />
       <div className="App-container">
         <Router>
