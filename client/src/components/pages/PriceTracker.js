@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const Graph = () => {
+const PriceTracker = () => {
   return;
 };
-export default Graph;
+export default PriceTracker;

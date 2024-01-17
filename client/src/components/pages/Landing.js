@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const Graph = () => {
-  return;
+const Landing = () => {
+  return <div></div>;
 };
-export default Graph;
+export default Landing;

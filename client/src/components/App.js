@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Router } from "@reach/router";
 import { get, post } from "../utilities";
-import NavBar from "./modules/Navbar.js";
+import NavBar from "./modules/NavBar.js";
 import Landing from "./pages/Landing.js";
 import NotFound from "./pages/NotFound.js";
 import Graph from "./pages/Graph.js";
 import Profile from "./pages/Profile.js";
+import About from "./pages/About.js";
+import PriceTracker from "./pages/PriceTracker.js";
 
 import "../utilities.css";
 import "./App.css";
@@ -44,14 +46,15 @@ const App = () => {
   // TODO: add userID in the future
   return (
     <>
-      <p>Hello</p>
       <NavBar />
       <div className="App-container">
         <Router>
           <Landing path="/" />
-          <Graph path="/graph/" />
-          <PriceTracker path="/price/" />
-          <Profile path="/profile/" />
+          <Graph path="/BR" />
+          <Graph path="/Vehicles" />
+          <PriceTracker path="/Price_Tracker" />
+          <Profile path="/Profile" />
+          <About path="/About" />
           <NotFound default />
         </Router>
       </div>

@@ -15,16 +15,17 @@
 */
 
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,600");
+@import url("https://fonts.googleapis.com/css2?family=Bruno+Ace&family=Coda:wght@400;800&display=swap");
 
 :root {
-  --primary: #499CA9;
-  --secondary: #7C959A;
+  --primary: #499ca9;
+  --secondary: #7c959a;
   --darkgrey: #d4d4d4;
   --medgrey: #e0e0e0;
   --grey: #f7f7f7;
   --white: #fff;
-  --background: #0E1415;
-  --text: #B5CFD4:
+  --background: #0e1415;
+  --text: #b5cfd4;
 
   --xs: 4px;
   --s: 8px;
