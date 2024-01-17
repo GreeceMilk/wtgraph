@@ -6,37 +6,30 @@ import "./NavBar.css";
 const NavBar = () => {
   return (
     <nav className="NavBar-container">
-      <div className="NavBar-blockMain">
-        <Link to="/" className="NavBar-LinkTextMain">
-          wtgraph.com
-        </Link>
-        <rect class="NavBar-MainRect"></rect>
-      </div>
-      <div className="NavBar-block">
-        <Link to="/Vehicles" className="NavBar-LinkText">
-          Search by vehicles
-        </Link>
-      </div>
-      <div className="NavBar-block">
-        <Link to="/BR" className="NavBar-LinkText">
-          Search by BR
-        </Link>
-      </div>
-      <div className="NavBar-block">
-        <Link to="/Price_Tracker" className="NavBar-LinkText">
-          Price Tracker
-        </Link>
-      </div>
-      <div className="NavBar-block">
-        <Link to="/Profile" className="NavBar-LinkText">
-          Profile
-        </Link>
-      </div>
-      <div className="NavBar-block">
-        <Link to="/About" className="NavBar-LinkText">
-          About
-        </Link>
-      </div>
+      <Link to="/" className="NavBar-blockMain">
+        <div className="NavBar-PrimaryRectangle"></div>
+        <p className="NavBar-LinkTextMain">wtgraph.com</p>
+      </Link>
+      <Link to="/Vehicles" className="NavBar-block NavBar-SecondaryColor">
+        <div className="NavBar-SecondaryRectangle"></div>
+        <p className="NavBar-LinkText">Search by vehicles</p>
+      </Link>
+      <Link to="/BR" className="NavBar-block NavBar-PrimaryColor">
+        <div className="NavBar-PrimaryRectangle"></div>
+        <p className="NavBar-LinkText">Search by BR</p>
+      </Link>
+      <Link to="/Price_Tracker" className="NavBar-block NavBar-SecondaryColor">
+        <div className="NavBar-SecondaryRectangle"></div>
+        <p className="NavBar-LinkText">Price Tracker</p>
+      </Link>
+      <Link to="/Profile" className="NavBar-block NavBar-PrimaryColor">
+        <div className="NavBar-PrimaryRectangle"></div>
+        <p className="NavBar-LinkText">Profile</p>
+      </Link>
+      <Link to="/About" className="NavBar-block NavBar-SecondaryColor">
+        <div className="NavBar-SecondaryRectangle"></div>
+        <p className="NavBar-LinkText">About</p>
+      </Link>
     </nav>
   );
 };
