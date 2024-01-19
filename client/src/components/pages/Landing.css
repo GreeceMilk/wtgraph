@@ -1,5 +1,16 @@
-iframe {
-  border: 0;
-  overflow: hidden;
-  width: 100%;
+.Landing-ContentBox {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 50px;
+}
+
+.Landing-PlayerBox {
+  flex: 0.2 1 50%;
+}
+
+.Landing-NewsBox {
+  flex: 0.1 1 400px;
+  height: 600px;
+  object-fit: contain;
 }

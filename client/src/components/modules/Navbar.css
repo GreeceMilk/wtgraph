@@ -10,7 +10,7 @@
   color: var(--text, #b1cbd0);
   text-align: center;
   font-family: Bruno Ace;
-  font-size: 36px;
+  font-size: max(16px, min(36px, 2.4vw));
   font-style: normal;
   font-weight: 400;
   line-height: normal;
@@ -22,7 +22,7 @@
   color: var(--text, #b1cbd0);
   text-align: center;
   font-family: Coda;
-  font-size: 24px;
+  font-size: max(12px, min(1.6vw, 24px));
   font-style: normal;
   font-weight: 400;
   line-height: normal;
