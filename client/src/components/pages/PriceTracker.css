@@ -1,0 +1,11 @@
+.PriceTracker-graph {
+  flex: 1 1 70%;
+}
+
+.PriceTracker-select {
+  flex: 1 1 20%;
+}
+
+.PriceTracker-container {
+  justify-content: space-around;
+}

@@ -4,13 +4,21 @@ import React, { useState, useEffect } from "react";
 // import "chartjs-adapter-date-fns";
 // import "../modules/OneGraph.js";
 import OneGraph from "../modules/OneGraph.js";
+import Selector from "../modules/Selector.js";
+import "./PriceTracker.css";
 
 const PriceTracker = () => {
   const [vehicle, setVehicle] = useState("M1A2 Abrams");
-
+  // TODO: Add display for vehicles's name, br, silver lion cost, and golden eagle cost using warthunder wiki api
+  // TODO: add selectors for vehicles
   return (
-    <div>
-      <OneGraph />{" "}
+    <div className="u-flex PriceTracker-container">
+      <div className="PriceTracker-graph">
+        <OneGraph v={vehicle} />
+      </div>
+      <div className="PriceTracker-select">
+        <Selector v={vehicle} setV={setVehicle} />
+      </div>
     </div>
   );
 };
