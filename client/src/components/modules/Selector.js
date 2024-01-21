@@ -1,6 +1,8 @@
 import React from "react";
-import Button from "react-bootstrap/Button";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
+import { Autocomplete } from "@mui/material";
+import TextField from "@mui/material/TextField";
+import "./Selector.css";
+import createTheme from "@mui/material";
 
 const Selector = (props) => {
   const vehicles = [
@@ -81,17 +83,14 @@ const Selector = (props) => {
     "Tiger",
     "KV-1",
   ];
-  const toButton = (vehicle) => {
-    return (
-      <Button variant="primary" onClick={() => props.setV(vehicle)}>
-        {vehicle}
-      </Button>
-    );
-  };
+
   return (
-    <div>
-      <ButtonGroup vertical>{vehicles.map(toButton)}</ButtonGroup>
-    </div>
+    <Autocomplete
+      id="vehicle-select"
+      options={vehicles}
+      onChange={(event, value) => props.setV(value)}
+      renderInput={(params) => <TextField {...params} label="Vehicle" variant="outlined" />}
+    ></Autocomplete>
   );
 };
 
