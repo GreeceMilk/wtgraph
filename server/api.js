@@ -14,6 +14,7 @@ const express = require("express");
 // const Comment = require("./models/comment");
 // const User = require("./models/user");
 // const Message = require("./models/message");
+const price = require("./models/price");
 
 // import authentication library
 const auth = require("./auth");
@@ -22,6 +23,12 @@ const auth = require("./auth");
 const router = express.Router();
 
 // const socketManager = require("./server-socket");
+
+router.get("/prices", (req, res) => {
+  price.find({}).then((prices) => {
+    res.send(prices);
+  });
+});
 
 router.post("/login", auth.login);
 router.post("/logout", auth.logout);

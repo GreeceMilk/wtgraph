@@ -1,10 +1,19 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import App from "./components/App.js";
-// import "bootstrap/dist/css/bootstrap.min.css";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+
+const dark = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
 
 // renders React Component "Root" into the DOM element with ID "root"
-ReactDOM.render(<App />, document.getElementById("root"));
-
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <ThemeProvider theme={dark}>
+    <App />
+  </ThemeProvider>
+);
 // allows for live updating
 module.hot.accept();

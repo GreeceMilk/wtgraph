@@ -8,16 +8,18 @@ import Selector from "../modules/Selector.js";
 import "./PriceTracker.css";
 
 const PriceTracker = () => {
-  const [vehicle, setVehicle] = useState("M1A2 Abrams");
+  const [vehicle, setVehicle] = useState("");
+  const [data, setData] = useState([]);
   // TODO: Add display for vehicles's name, br, silver lion cost, and golden eagle cost using warthunder wiki api
   // TODO: add selectors for vehicles
   return (
     <div className="u-flex PriceTracker-container">
       <div className="PriceTracker-graph">
-        <OneGraph v={vehicle} />
+        {data.prices ? <OneGraph data={data} /> : <p>Please Select an Item</p>}
       </div>
+
       <div className="PriceTracker-select">
-        <Selector v={vehicle} setV={setVehicle} />
+        <Selector v={vehicle} setV={setVehicle} setD={setData} />
       </div>
     </div>
   );

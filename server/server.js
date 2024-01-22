@@ -31,7 +31,7 @@ const auth = require("./auth");
 const proc = require("dotenv").config();
 
 // socket stuff
-const socketManager = require("./server-socket");
+// const socketManager = require("./server-socket");
 
 // Server configuration below
 // TODO change connection URL after setting up your own database
@@ -60,7 +60,7 @@ app.use(bodyParser.json());
 // set up a session, which will persist login data across requests
 app.use(
   session({
-    secret: process.env.secret,
+    secret: process.env.session,
     resave: false,
     saveUninitialized: false,
   })
@@ -100,7 +100,7 @@ app.use((err, req, res, next) => {
 // hardcode port to 3000 for now
 const port = process.env.port || 3000;
 const server = http.Server(app);
-socketManager.init(server);
+// socketManager.init(server);
 
 server.listen(port, () => {
   console.log(`Server running on port: ${port}`);
