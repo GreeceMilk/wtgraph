@@ -34,6 +34,21 @@ router.get("/prices", (req, res) => {
   });
 });
 
+// TODO fill out the endpoints
+router.get("/vehicleslist", (req, res) => {});
+
+router.get("/vehicles", (req, res) => {
+  // req.query.vehicle
+  // req.query.stat
+});
+
+router.get("/nationslist", (req, res) => {});
+router.get("/nations", (req, res) => {
+  // req.query.nation
+  // req.query.mode
+  // req.query.stat
+});
+
 router.post("/login", auth.login);
 router.post("/logout", auth.logout);
 router.get("/whoami", (req, res) => {
