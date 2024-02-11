@@ -13,4 +13,7 @@ const NationSchemaAb = new mongoose.Schema({
   cls: String,
 });
 
-module.exports = mongoose.model("nation_ab", NationSchemaAb);
+const ab_ranks_0 = mongoose.model("ab_ranks_0", NationSchemaAb, "ab_ranks_0");
+const ab_ranks_1 = mongoose.model("ab_ranks_1", NationSchemaAb, "ab_ranks_1");
+const ab_ranks_all = mongoose.model("ab_ranks_all", NationSchemaAb, "ab_ranks_all");
+module.exports = { ab_ranks_0, ab_ranks_1, ab_ranks_all };

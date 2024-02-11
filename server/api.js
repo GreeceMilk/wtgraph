@@ -15,10 +15,10 @@ const express = require("express");
 // const User = require("./models/user");
 // const Message = require("./models/message");
 const price = require("./models/price");
+const { sb_ranks_all, sb_ranks_1, sb_ranks_0 } = require("./models/nation_sb");
 const vehicle = require("./models/vehicle");
-const nation_ab = require("./models/nation_ab");
-const nation_rb = require("./models/nation_rb");
-const nation_sb = require("./models/nation_sb");
+const { ab_ranks_0, ab_ranks_1, ab_ranks_all } = require("./models/nation_ab");
+const { rb_ranks_0, rb_ranks_1, rb_ranks_all } = require("./models/nation_rb");
 
 // import authentication library
 const auth = require("./auth");
@@ -27,6 +27,20 @@ const auth = require("./auth");
 const router = express.Router();
 
 // const socketManager = require("./server-socket");
+
+router.get("/price_list", (req, res) => {
+  price
+    .aggregate([
+      {
+        $group: {
+          _id: "$name",
+        },
+      },
+    ])
+    .then((prices) => {
+      res.send(prices);
+    });
+});
 
 router.get("/prices", (req, res) => {
   price.find({}).then((prices) => {

@@ -37,7 +37,7 @@ const proc = require("dotenv").config();
 // TODO change connection URL after setting up your own database
 const mongoConnectionURL = process.env.mongoDBURL;
 // TODO change database name to the name you chose
-const databaseName = "catbook";
+const databaseName = "wtgraph";
 
 // connect to mongodb
 mongoose
