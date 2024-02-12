@@ -4,8 +4,8 @@ import TextField from "@mui/material/TextField";
 import { get } from "../../utilities";
 
 const Selector = (props) => {
-  const [vehicleList, setVehicleList] = useState([]);
-  const [allData, setAllData] = useState([]);
+  const [list, setList] = useState([]);
+  // const [allData, setAllData] = useState([]);
   // const vehicles = [
   //   "M1A2 Abrams",
   //   "T-80U",
@@ -33,22 +33,35 @@ const Selector = (props) => {
   //   "M60A1 (AOS)",
   // ];
   useEffect(() => {
-    get("/api/prices").then((v) => {
-      setVehicleList(v.map((vehicle) => vehicle.name));
-      setAllData(v);
-    });
+    if (props.mode === "price") {
+      get("/api/price_list").then((v) => {
+        setList(v.map((element) => element._id));
+      });
+    } else if (props.mode === "nation") {
+      get("/api/nation_list").then((v) => {
+        setList(v);
+      });
+    } else if (props.mode === "vehicle") {
+      get("/api/vehicle_list").then((v) => {
+        setList(v);
+      });
+    } else if (props.mode === "BR") {
+      get("").then((v) => {
+        setList(v); // Fill details
+      });
+    }
   }, []);
-  const findData = (vehicleName) => {
-    return allData.find((v) => {
-      return v.name === vehicleName;
-    });
-  };
+  // const findData = (vehicleName) => {
+  //   return allData.find((v) => {
+  //     return v.name === vehicleName;
+  //   });
+  // };
 
   return (
     <Autocomplete
       id="vehicle-select"
-      options={vehicleList}
-      onChange={(event, value) => props.setD(findData(value))}
+      options={list}
+      onChange={(event, value) => props.func(value)}
       renderInput={(params) => <TextField {...params} label="Vehicle" />}
     ></Autocomplete>
   );

@@ -50,8 +50,8 @@ const App = () => {
       <div className="App-container">
         <Router>
           <Landing path="/" />
-          <Graph path="/BR" />
-          <Graph path="/Vehicles" />
+          <Graph path="/BR" mode="BR" />
+          <Graph path="/Vehicles" mode="Vehicles" />
           <PriceTracker path="/Price_Tracker" />
           <Profile path="/Profile" />
           <About path="/About" />

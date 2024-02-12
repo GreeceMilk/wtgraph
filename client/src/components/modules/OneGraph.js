@@ -69,9 +69,9 @@ const OneGraph = (props) => {
   return (
     <div>
       <Line data={data} options={time_option}></Line>
-      {/* {console.log(d)}
+      {console.log(d)}
       {console.log(price)}
-      {console.log(ctime)} */}
+      {console.log(ctime)}
     </div>
   );
 };

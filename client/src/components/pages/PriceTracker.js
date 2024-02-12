@@ -6,12 +6,21 @@ import React, { useState, useEffect } from "react";
 import OneGraph from "../modules/OneGraph.js";
 import Selector from "../modules/Selector.js";
 import "./PriceTracker.css";
+import { get } from "../../utilities";
 
 const PriceTracker = () => {
   const [vehicle, setVehicle] = useState("");
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({});
   // TODO: Add display for vehicles's name, br, silver lion cost, and golden eagle cost using warthunder wiki api
   // TODO: add selectors for vehicles
+
+  useEffect(() => {
+    get("/api/prices", { vehicle: vehicle }).then((v) => {
+      setData(v);
+    });
+    console.log(vehicle);
+  }, [vehicle]);
+
   return (
     <div className="u-flex PriceTracker-container">
       <div className="PriceTracker-graph">
@@ -19,7 +28,7 @@ const PriceTracker = () => {
       </div>
 
       <div className="PriceTracker-select">
-        <Selector v={vehicle} setV={setVehicle} setD={setData} />
+        <Selector func={setVehicle} mode="price" />
       </div>
     </div>
   );

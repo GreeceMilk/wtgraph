@@ -10,10 +10,6 @@
 const express = require("express");
 
 // import models so we can interact with the database
-// const Story = require("./models/story");
-// const Comment = require("./models/comment");
-// const User = require("./models/user");
-// const Message = require("./models/message");
 const price = require("./models/price");
 const { sb_ranks_all, sb_ranks_1, sb_ranks_0 } = require("./models/nation_sb");
 const vehicle = require("./models/vehicle");
@@ -27,6 +23,8 @@ const auth = require("./auth");
 const router = express.Router();
 
 // const socketManager = require("./server-socket");
+
+const modeList = ["rb", "ab", "sb"];
 
 router.get("/price_list", (req, res) => {
   price
@@ -43,20 +41,23 @@ router.get("/price_list", (req, res) => {
 });
 
 router.get("/prices", (req, res) => {
-  price.find({}).then((prices) => {
+  if (!req.query.vehicle) {
+    return res.send({});
+  }
+  price.findOne({ name: req.query.vehicle }).then((prices) => {
     res.send(prices);
   });
 });
 
 // TODO fill out the endpoints
-router.get("/vehicleslist", (req, res) => {});
+router.get("/vehicle_list", (req, res) => {});
 
 router.get("/vehicles", (req, res) => {
   // req.query.vehicle
   // req.query.stat
 });
 
-router.get("/nationslist", (req, res) => {});
+router.get("/nation_list", (req, res) => {});
 router.get("/nations", (req, res) => {
   // req.query.nation
   // req.query.mode
