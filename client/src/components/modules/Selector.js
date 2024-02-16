@@ -2,9 +2,14 @@ import React, { useEffect, useState } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { get } from "../../utilities";
+import { setLabels } from "react-chartjs-2/dist/utils";
+
+// props: mode, func
 
 const Selector = (props) => {
   const [list, setList] = useState([]);
+  const [label, setLabel] = useState("");
+  // testing data
   // const [allData, setAllData] = useState([]);
   // const vehicles = [
   //   "M1A2 Abrams",
@@ -37,18 +42,31 @@ const Selector = (props) => {
       get("/api/price_list").then((v) => {
         setList(v.map((element) => element._id));
       });
+      setLabel("Vehicle");
     } else if (props.mode === "nation") {
       get("/api/nation_list").then((v) => {
         setList(v);
       });
+      setLabel("Nation");
     } else if (props.mode === "vehicle") {
       get("/api/vehicle_list").then((v) => {
         setList(v);
       });
+      setLabel("Vehicle");
     } else if (props.mode === "BR") {
       get("").then((v) => {
         setList(v); // Fill details
       });
+      setLabel("Lower BR")
+    } else if (props.mode === "gamemode") {
+      setList(["RB", "AB", "SB"]);
+      setLabel("Gamemode")
+    } else if (props.mode === "cls") {
+      setList(["Ground", "Aviation", "Naval"]);
+      setLabel("Class")
+    } else if (props.mode === "brRange") {
+      setList(["All", "0", "1"]);
+      setLabel("BR Range")
     }
   }, []);
   // const findData = (vehicleName) => {
