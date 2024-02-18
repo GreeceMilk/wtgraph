@@ -23,9 +23,35 @@ const auth = require("./auth");
 const router = express.Router();
 
 // const socketManager = require("./server-socket");
-
-const modeList = ["rb", "ab", "sb"];
-
+const chooseDb = (mode, brRange) => {
+  if (mode === "ab") {
+    if (brRange === "1") {
+      return ab_ranks_1;
+    } else if (brRange === "0") {
+      return ab_ranks_0;
+    } else {
+      return ab_ranks_all;
+    }
+  } else if (mode === "rb") {
+    if (brRange === "1") {
+      return rb_ranks_1;
+    } else if (brRange === "0") {
+      return rb_ranks_0;
+    } else {
+      return rb_ranks_all;
+    }
+  } else if (mode === "sb") {
+    if (brRange === "1") {
+      return sb_ranks_1;
+    } else if (brRange === "0") {
+      return sb_ranks_0;
+    } else {
+      return sb_ranks_all;
+    }
+  }
+  // Default return statement
+  return null;
+};
 router.get("/price_list", (req, res) => {
   price
     .aggregate([
@@ -57,13 +83,74 @@ router.get("/vehicles", (req, res) => {
   // req.query.stat
 });
 
-router.get("/nation_list", (req, res) => {});
-router.get("/nations", (req, res) => {
-  // req.query.nation
-  // req.query.mode
-  // req.query.stat
+router.get("/nation_list", (req, res) => {
+  ab_ranks_all.aggregate([{ $group: { _id: "$nation" } }]).then((nations) => {
+    res.send(nations.map((nation) => nation._id));
+  });
 });
 
+router.get("/nations", (req, res) => {
+  // req.query.nation
+  // req.query.gamemode
+  // req.query.field
+  // req.query.cls
+  // req.query.br
+  // req.query.brRange
+
+  const db = chooseDb(req.query.gamemode, req.query.brRange);
+  if (db) {
+    db.find(
+      {
+        nation: req.query.nation,
+        cls: req.query.cls,
+        [req.query.gamemode + "_lower_br"]: req.query.br,
+      },
+      ["date", req.query.field]
+    )
+      .sort({ date: 1 })
+      .then((nations) => {
+        res.send(nations);
+      });
+  } else {
+    res.send([]);
+  }
+});
+
+router.get("/br_list", (req, res) => {
+  const mode = req.query.mode;
+  const cls = req.query.cls;
+  const nation = req.query.nation;
+  let aggregation = [
+    {
+      $match: {
+        nation: nation,
+        cls: cls,
+      },
+    },
+    {
+      $group: {
+        _id: "$" + mode + "_lower_br",
+      },
+    },
+  ];
+  const db = chooseDb(mode, "0");
+  if (db) {
+    db.aggregate(aggregation).then((brs) => {
+      res.send(brs.map((br) => String(br._id)).sort((a, b) => a - b));
+    });
+  } else {
+    res.send([]);
+  }
+});
+
+router.get("/cls_list", (req, res) => {
+  const nation = req.query.nation;
+  ab_ranks_all
+    .aggregate([{ $match: { nation: nation } }, { $group: { _id: "$cls" } }])
+    .then((clss) => {
+      res.send(clss.map((cls) => cls._id));
+    });
+});
 router.post("/login", auth.login);
 router.post("/logout", auth.logout);
 router.get("/whoami", (req, res) => {

@@ -1,0 +1,8 @@
+.graph-selectorContainer {
+  justify-content: center;
+}
+
+.graph-selector {
+  margin: 0 10px;
+  width: 200px;
+}

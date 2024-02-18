@@ -14,9 +14,9 @@ const OneGraph = (props) => {
   //     ctime.push("2024-01-" + i);
   //   }
   // }
-  const d = props.data;
-  const ctime = d.prices.map((element) => element.time);
-  const price = d.prices.map((element) => element["new price"]);
+  // const d = props.data;
+  // const ctime = d.prices.map((element) => element.time);
+  // const price = d.prices.map((element) => element["new price"]);
 
   // const options = {
   //   responsive: true,
@@ -34,14 +34,14 @@ const OneGraph = (props) => {
     plugins: {
       title: {
         display: true,
-        text: d.name + " Price History",
+        // text: d.name + " Price History",
       },
     },
     scales: {
       x: {
         type: "time",
         time: {
-          parser: "yyyy-MM-dd",
+          // parser: "yyyy-MM-dd",
           displayFormats: {
             day: "yy-MM-dd",
           },
@@ -54,11 +54,11 @@ const OneGraph = (props) => {
     },
   };
   const data = {
-    labels: ctime,
+    labels: props.dataX,
     datasets: [
       {
         label: "Price",
-        data: price,
+        data: props.dataY,
         fill: false,
         borderColor: "rgb(75, 192, 192)",
         tension: 0.1,
@@ -69,9 +69,9 @@ const OneGraph = (props) => {
   return (
     <div>
       <Line data={data} options={time_option}></Line>
-      {console.log(d)}
+      {/* {console.log(d)}
       {console.log(price)}
-      {console.log(ctime)}
+      {console.log(ctime)} */}
     </div>
   );
 };

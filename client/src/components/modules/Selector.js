@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { get } from "../../utilities";
-import { setLabels } from "react-chartjs-2/dist/utils";
+// import { setLabels } from "react-chartjs-2/dist/utils";
 
 // props: mode, func
 
@@ -37,6 +37,7 @@ const Selector = (props) => {
   //   "Type 74G",
   //   "M60A1 (AOS)",
   // ];
+
   useEffect(() => {
     if (props.mode === "price") {
       get("/api/price_list").then((v) => {
@@ -53,22 +54,41 @@ const Selector = (props) => {
         setList(v);
       });
       setLabel("Vehicle");
-    } else if (props.mode === "BR") {
-      get("").then((v) => {
-        setList(v); // Fill details
-      });
-      setLabel("Lower BR")
+    } else if (props.mode === "br") {
+      if (props.brRange === 2) {
+        setList(["All"]);
+      } else {
+        get("/api/br_list", { mode: props.gamemode, cls: props.cls, nation: props.nation }).then(
+          (v) => {
+            // console.log(v);
+            setList(v);
+          }
+        );
+      }
+      setLabel("Lower BR");
     } else if (props.mode === "gamemode") {
       setList(["RB", "AB", "SB"]);
-      setLabel("Gamemode")
+      setLabel("Gamemode");
     } else if (props.mode === "cls") {
-      setList(["Ground", "Aviation", "Naval"]);
-      setLabel("Class")
+      get("/api/cls_list", { nation: props.nation }).then((v) => {
+        setList(v);
+      });
+      setLabel("Class");
     } else if (props.mode === "brRange") {
       setList(["All", "0", "1"]);
-      setLabel("BR Range")
+      setLabel("BR Range");
+    } else if (props.mode === "dataEntry") {
+      setList([
+        "Win Rate",
+        "# of Battles",
+        "Air Frags/Battle",
+        "Ground Frags/Battle",
+        "Ground Frags/Death",
+        "Air Frags/Death",
+      ]);
+      setLabel("Statistics");
     }
-  }, []);
+  }, [props]);
   // const findData = (vehicleName) => {
   //   return allData.find((v) => {
   //     return v.name === vehicleName;
@@ -80,7 +100,7 @@ const Selector = (props) => {
       id="vehicle-select"
       options={list}
       onChange={(event, value) => props.func(value)}
-      renderInput={(params) => <TextField {...params} label="Vehicle" />}
+      renderInput={(params) => <TextField {...params} label={label} />}
     ></Autocomplete>
   );
 };
