@@ -4,10 +4,11 @@ import { get, post } from "../utilities";
 import NavBar from "./modules/NavBar.js";
 import Landing from "./pages/Landing.js";
 import NotFound from "./pages/NotFound.js";
-import Graph from "./pages/Graph.js";
+import NationGraph from "./pages/NationGraph.js";
 import Profile from "./pages/Profile.js";
 import About from "./pages/About.js";
 import PriceTracker from "./pages/PriceTracker.js";
+import VehicleGraph from "./pages/VehicleGraph.js";
 
 import "../utilities.css";
 import "./App.css";
@@ -50,8 +51,8 @@ const App = () => {
       <div className="App-container">
         <Router>
           <Landing path="/" />
-          <Graph path="/BR" mode="BR" />
-          <Graph path="/Vehicles" mode="Vehicles" />
+          <NationGraph path="/BR" />
+          <VehicleGraph path="/Vehicles" />
           <PriceTracker path="/Price_Tracker" />
           <Profile path="/Profile" />
           <About path="/About" />

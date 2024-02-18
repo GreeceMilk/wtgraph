@@ -10,7 +10,7 @@ import { get } from "../../utilities";
 
 const PriceTracker = () => {
   const [vehicle, setVehicle] = useState("");
-  const [data, setData] = useState({});
+  const [data, setData] = useState([]);
   // TODO: Add display for vehicles's name, br, silver lion cost, and golden eagle cost using warthunder wiki api
   // TODO: add selectors for vehicles
 
@@ -19,12 +19,20 @@ const PriceTracker = () => {
       setData(v);
     });
     console.log(vehicle);
+    console.log(data);
   }, [vehicle]);
 
   return (
     <div className="u-flex PriceTracker-container">
       <div className="PriceTracker-graph">
-        {data.prices ? <OneGraph data={data} /> : <p>Please Select an Item</p>}
+        {data ? (
+          <OneGraph
+            dataX={data.map((element) => element.date)}
+            dataY={data.map((element) => element.new_price)}
+          />
+        ) : (
+          <p>Please Select an Item</p>
+        )}
       </div>
 
       <div className="PriceTracker-select">

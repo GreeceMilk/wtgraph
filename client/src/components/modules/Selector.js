@@ -101,6 +101,8 @@ const Selector = (props) => {
       options={list}
       onChange={(event, value) => props.func(value)}
       renderInput={(params) => <TextField {...params} label={label} />}
+      defaultValue={props.default}
+      disableClearable
     ></Autocomplete>
   );
 };

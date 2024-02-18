@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Selector from "../modules/Selector.js";
-import { get } from "../../utilities";
+import { get } from "../../utilities.js";
 import OneGraph from "../modules/OneGraph.js";
-import "./Graph.css";
+import "./NationGraph.css";
+import { Button } from "@mui/material";
 
 const Graph = (props) => {
   const [gamemode, setGamemode] = useState("AB");
@@ -15,8 +16,9 @@ const Graph = (props) => {
   const convertBr = (brStr) => {
     if (brStr === "All") {
       setBrRange(2);
+    } else {
+      setBrRange(parseInt(brStr));
     }
-    return setBrRange(parseInt(brStr));
   };
   const convertField = (fieldStr) => {
     if (gamemode) {
@@ -36,7 +38,7 @@ const Graph = (props) => {
     }
   };
 
-  useEffect(() => {
+  const getData = () => {
     get("/api/nations", {
       gamemode: gamemode.toLowerCase(),
       cls: cls,
@@ -49,23 +51,37 @@ const Graph = (props) => {
       console.log(v.length);
       setData(v);
     });
-  }, [gamemode, nation, cls, startBr, brRange, field]);
+  };
+  // useEffect(() => {
+  //   get("/api/nations", {
+  //     gamemode: gamemode.toLowerCase(),
+  //     cls: cls,
+  //     nation: nation,
+  //     br: startBr,
+  //     brRange: brRange,
+  //     field: field,
+  //   }).then((v) => {
+  //     console.log(v[0]);
+  //     console.log(v.length);
+  //     setData(v);
+  //   });
+  // }, [gamemode, nation, cls, startBr, brRange, field]);
   console.log(gamemode, nation, cls, startBr, brRange);
 
   return (
     <>
       <div className="u-flex graph-selectorContainer">
         <div className="graph-selector">
-          <Selector func={setGamemode} mode="gamemode" />
+          <Selector func={setGamemode} mode="gamemode" default="AB" />
         </div>
         <div className="graph-selector">
-          <Selector func={setNation} mode="nation" />
+          <Selector func={setNation} mode="nation" default="USA" />
         </div>
         <div className="graph-selector">
-          <Selector func={setCls} mode="cls" nation={nation} />
+          <Selector func={setCls} mode="cls" nation={nation} default="Aviation" />
         </div>
         <div className="graph-selector">
-          <Selector func={convertBr} mode="brRange" />
+          <Selector func={convertBr} mode="brRange" default="0" />
         </div>
         <div className="graph-selector">
           <Selector
@@ -75,10 +91,16 @@ const Graph = (props) => {
             nation={nation}
             cls={cls}
             brRange={brRange}
+            default="1"
           />
         </div>
         <div className="graph-selector">
-          <Selector func={convertField} mode="dataEntry" />
+          <Selector func={convertField} mode="dataEntry" default="Win Rate" />
+        </div>
+        <div className="graph-selector">
+          <Button onClick={getData} variant="contained">
+            Display
+          </Button>
         </div>
       </div>
       <div className="">

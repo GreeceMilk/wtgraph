@@ -68,10 +68,11 @@ router.get("/price_list", (req, res) => {
 
 router.get("/prices", (req, res) => {
   if (!req.query.vehicle) {
-    return res.send({});
+    return res.send([]);
   }
-  price.findOne({ name: req.query.vehicle }).then((prices) => {
+  price.find({ name: req.query.vehicle }, "date new_price old_price discount").then((prices) => {
     res.send(prices);
+    // console.log(prices);
   });
 });
 
@@ -103,7 +104,7 @@ router.get("/nations", (req, res) => {
       {
         nation: req.query.nation,
         cls: req.query.cls,
-        [req.query.gamemode + "_lower_br"]: req.query.br,
+        [req.query.gamemode + "_lower_br"]: req.query.brRange === "2" ? 1 : req.query.br,
       },
       ["date", req.query.field]
     )
