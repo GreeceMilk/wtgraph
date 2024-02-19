@@ -39,19 +39,42 @@ const OneGraph = (props) => {
     },
     scales: {
       x: {
+        border: {
+          color: "#d4d4d4",
+        },
+        ticks: {
+          color: "#d4d4d4",
+        },
         type: "time",
         time: {
           // parser: "yyyy-MM-dd",
           displayFormats: {
             day: "yy-MM-dd",
           },
-          unit: "day",
+          unit: "month",
+          tooltipFormat: "yy-MM-dd",
         },
         ticks: {
           source: "data",
         },
       },
+      y: {
+        suggestedMin: 0,
+        suggestedMax: 13,
+        border: {
+          color: "#d4d4d4",
+        },
+        ticks: {
+          color: "#d4d4d4",
+        },
+      },
     },
+    elements: {
+      point: {
+        pointStyle: false,
+      },
+    },
+    clip: 2,
   };
   const data = {
     labels: props.dataX,

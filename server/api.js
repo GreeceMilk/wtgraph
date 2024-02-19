@@ -76,12 +76,38 @@ router.get("/prices", (req, res) => {
   });
 });
 
-// TODO fill out the endpoints
-router.get("/vehicle_list", (req, res) => {});
+router.get("/vehicle_list", (req, res) => {
+  vehicle
+    .aggregate([
+      {
+        $match: {
+          nation: req.query.nation,
+          cls: req.query.cls,
+        },
+      },
+      {
+        $group: {
+          _id: "$wk_name",
+        },
+      },
+    ])
+    .then((vehicles) => {
+      res.send(vehicles.map((vehicle) => decodeURIComponent(vehicle._id).split("_").join(" ")));
+      // console.log(vehicles);
+    });
+});
 
 router.get("/vehicles", (req, res) => {
-  // req.query.vehicle
-  // req.query.stat
+  vehicle
+    .find({ wk_name: encodeURIComponent(req.query.vehicle.split(" ").join("_")) }, [
+      "date",
+      req.query.field,
+    ])
+    .sort({ date: 1 })
+    .then((data) => {
+      res.send(data);
+      // console.log(data);
+    });
 });
 
 router.get("/nation_list", (req, res) => {

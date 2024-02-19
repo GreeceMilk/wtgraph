@@ -44,4 +44,4 @@ const VehicleSchema = new mongoose.Schema({
   sb_sl_rate: Number,
 });
 
-module.exports = mongoose.model("vehicle", VehicleSchema);
+module.exports = mongoose.model("vehicle", VehicleSchema, "joined");

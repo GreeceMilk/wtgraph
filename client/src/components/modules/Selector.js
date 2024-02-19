@@ -50,7 +50,7 @@ const Selector = (props) => {
       });
       setLabel("Nation");
     } else if (props.mode === "vehicle") {
-      get("/api/vehicle_list").then((v) => {
+      get("/api/vehicle_list", { nation: props.nation, cls: props.cls }).then((v) => {
         setList(v);
       });
       setLabel("Vehicle");
@@ -87,6 +87,42 @@ const Selector = (props) => {
         "Air Frags/Death",
       ]);
       setLabel("Statistics");
+    } else if (props.mode === "vdata") {
+      setList(
+        [
+          "AB Battles",
+          "AB Win Rate",
+          "AB Ground Frags/Battle",
+          "AB Ground Frags/Death",
+          "AB Air Frags/Battle",
+          "AB Air Frags/Death",
+          "RB Battles",
+          "RB Win Rate",
+          "RB Ground Frags/Battle",
+          "RB Ground Frags/Death",
+          "RB Air Frags/Battle",
+          "RB Air Frags/Death",
+          "SB Battles",
+          "SB Win Rate",
+          "SB Ground Frags/Battle",
+          "SB Ground Frags/Death",
+          "SB Air Frags/Battle",
+          "SB Air Frags/Death",
+          "AB BR",
+          "RB BR",
+          "SB BR",
+          "AB Repair",
+          "RB Repair",
+          "SB Repair",
+          "AB RP Rate",
+          "RB RP Rate",
+          "SB RP Rate",
+          "AB SL Rate",
+          "RB SL Rate",
+          "SB SL Rate",
+        ].sort()
+      );
+      setLabel("Data Entry");
     }
   }, [props]);
   // const findData = (vehicleName) => {
@@ -94,6 +130,9 @@ const Selector = (props) => {
   //     return v.name === vehicleName;
   //   });
   // };
+  const groupByMode = (option) => {
+    return option.slice(0, 2).toUpperCase();
+  };
 
   return (
     <Autocomplete
@@ -103,6 +142,7 @@ const Selector = (props) => {
       renderInput={(params) => <TextField {...params} label={label} />}
       defaultValue={props.default}
       disableClearable
+      groupBy={props.mode === "vdata" ? groupByMode : null}
     ></Autocomplete>
   );
 };
