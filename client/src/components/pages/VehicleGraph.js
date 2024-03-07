@@ -3,20 +3,30 @@ import OneGraph from "../modules/OneGraph";
 import Selector from "../modules/Selector";
 import { Button } from "@mui/material";
 import { get } from "../../utilities";
+import Alert from "@mui/material";
 
 const VehicleGraph = () => {
-  const [vehicle, setVehicle] = useState("");
-  const [nation, setNation] = useState("");
-  const [cls, setCls] = useState("");
-  const [field, setField] = useState("");
+  const [vehicle, setVehicle] = useState(null);
+  const [nation, setNation] = useState(null);
+  const [cls, setCls] = useState(null);
+  const [field, setField] = useState(null);
   const [data, setData] = useState([]);
   const showGraph = () => {
-    get("/api/vehicles", { vehicle: vehicle, field: field }).then((v) => {
-      setData(v);
-    });
+    if (vehicle !== null || field !== null) {
+      get("/api/vehicles", { vehicle: vehicle, field: field }).then((v) => {
+        setData(v);
+      });
+    } else {
+      console.log("No data");
+      // add alert
+    }
   };
   const parseField = (fieldStr) => {
-    setField(fieldStr.toLowerCase().split("/").join(" per ").split(" ").join("_"));
+    if (fieldStr !== null) {
+      setField(fieldStr.toLowerCase().split("/").join(" per ").split(" ").join("_"));
+    } else {
+      setField(null);
+    }
   };
   return (
     <>

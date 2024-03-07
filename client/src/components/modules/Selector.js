@@ -9,6 +9,7 @@ import { get } from "../../utilities";
 const Selector = (props) => {
   const [list, setList] = useState([]);
   const [label, setLabel] = useState("");
+  const [value, setValue] = useState(null);
   // testing data
   // const [allData, setAllData] = useState([]);
   // const vehicles = [
@@ -39,6 +40,10 @@ const Selector = (props) => {
   // ];
 
   useEffect(() => {
+    console.log("selector");
+    setValue(null);
+    props.func(null);
+    setList([]);
     if (props.mode === "price") {
       get("/api/price_list").then((v) => {
         setList(v.map((element) => element._id));
@@ -50,9 +55,12 @@ const Selector = (props) => {
       });
       setLabel("Nation");
     } else if (props.mode === "vehicle") {
-      get("/api/vehicle_list", { nation: props.nation, cls: props.cls }).then((v) => {
-        setList(v);
-      });
+      if (props.nation !== null && props.cls !== null) {
+        get("/api/vehicle_list", { nation: props.nation, cls: props.cls }).then((v) => {
+          setList(v);
+        });
+        console.log(props.nation, props.cls);
+      }
       setLabel("Vehicle");
     } else if (props.mode === "br") {
       if (props.brRange === 2) {
@@ -70,9 +78,11 @@ const Selector = (props) => {
       setList(["RB", "AB", "SB"]);
       setLabel("Gamemode");
     } else if (props.mode === "cls") {
-      get("/api/cls_list", { nation: props.nation }).then((v) => {
-        setList(v);
-      });
+      if (props.nation !== "") {
+        get("/api/cls_list", { nation: props.nation }).then((v) => {
+          setList(v);
+        });
+      }
       setLabel("Class");
     } else if (props.mode === "brRange") {
       setList(["All", "0", "1"]);
@@ -124,7 +134,7 @@ const Selector = (props) => {
       );
       setLabel("Data Entry");
     }
-  }, [props]);
+  }, [props.nation, props.cls, props.mode, props.brRange, props.gamemode, props.nation]);
   // const findData = (vehicleName) => {
   //   return allData.find((v) => {
   //     return v.name === vehicleName;
@@ -136,11 +146,15 @@ const Selector = (props) => {
 
   return (
     <Autocomplete
+      value={value}
       id="vehicle-select"
       options={list}
-      onChange={(event, value) => props.func(value)}
+      onChange={(event, value) => {
+        props.func(value);
+        setValue(value);
+      }}
       renderInput={(params) => <TextField {...params} label={label} />}
-      defaultValue={props.default}
+      // defaultValue={props.default}
       disableClearable
       groupBy={props.mode === "vdata" ? groupByMode : null}
     ></Autocomplete>
