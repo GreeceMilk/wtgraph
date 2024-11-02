@@ -61,23 +61,6 @@ public class NationService {
     }
 
     public Optional<Nation> getNation(String mode, String brRange, ObjectId id) {
-		// switch (mode+brRange) {
-		// 	case "ab0":
-		// 		return copyOf(nationAb0repo.findById(id));
-        //     case "ab1":
-        //         return copyOf(nationAb1repo.findById(id));
-        //     case "abAll":
-        //         return copyOf(nationAbAllRepo.findById(id));
-        //     case "rb0":
-        //         return copyOf(nationRb0Repo.findById(id)); 
-        //     case "rb1":
-        //         return copyOf(nationRb1Repo.findById(id));
-        //     case "rbAll":
-        //         return copyOf(nationRbAllRepo.findById(id));
-		// 	default:
-        //         return Optional.empty();
-		// }
-        // @SuppressWarnings("unchecked")
         NationRepo<? extends Nation, ObjectId> repo = chooseDb(mode, brRange);
         if (repo == null) {
             return Optional.empty();
@@ -129,9 +112,8 @@ public class NationService {
         if (repo == null) {
             return List.of();
         } else {
-            Sort sort = Sort.by("date").ascending();
             List<NationData> nationData = repo.findByNationAndCls(nation, cls, output, lowerBr);
-            // List<NationData> nationData = List.of();
+            // TODO: add sort after getting data Sort sort = Sort.by("date").ascending();
             if (nationData.isEmpty()) {
                 return List.of();
             } else {
