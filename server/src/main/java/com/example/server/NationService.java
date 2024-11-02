@@ -16,8 +16,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import com.example.server.nationrb.*;
-
 import com.example.server.nationab.*;
+import com.example.server.nationsb.*;
 
 @Service
 public class NationService {
@@ -29,17 +29,20 @@ public class NationService {
 
     @Autowired
     public NationService(NationRb1Repo nationRb1Repo, NationRb0Repo nationRb0Repo, NationRbAllRepo nationRbAllRepo,
-                         NationAb0Repo nationAb0repo, NationAb1Repo nationAb1repo, NationAbAllRepo nationAbAllRepo,
+                         NationAb0Repo nationAb0Repo, NationAb1Repo nationAb1Repo, NationAbAllRepo nationAbAllRepo,
+                         NationSb0Repo nationSb0Repo, NationSb1Repo nationSb1Repo, NationSbAllRepo nationSbAllRepo,
                          MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
         this.repoMap = Map.of(
             "rb1", nationRb1Repo,
             "rb0", nationRb0Repo,
             "rbAll", nationRbAllRepo,
-            "ab1", nationAb1repo,
-            "ab0", nationAb0repo,
-            "abAll", nationAbAllRepo
-            // TODO: add SB support
+            "ab1", nationAb1Repo,
+            "ab0", nationAb0Repo,
+            "abAll", nationAbAllRepo,
+            "sb0", nationSb0Repo, 
+            "sb1", nationSb1Repo,
+            "sbAll", nationSbAllRepo
         );
     }
 
