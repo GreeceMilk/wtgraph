@@ -89,7 +89,7 @@ public class NationService {
         if (brRange == "All") {
             return List.of(1d);
         } else {
-            Aggregation brList = Aggregation.newAggregation(Aggregation.match(new Criteria("nation").is(nation).and("cls").is(cls)), Aggregation.group( mode + "_lower_br"));
+            Aggregation brList = Aggregation.newAggregation(Aggregation.match(new Criteria("nation").is(nation).and("cls").is(cls)), Aggregation.group( mode + "_lower_br"), Aggregation.sort(Sort.by("_id")));
             AggregationResults<Map<String, Double>> result = mongoTemplate.aggregate(brList, mode + "_ranks_" + brRange, (Class<Map<String, Double>>)(Class<?>)Map.class);
             return result.getMappedResults().stream()
                     .flatMap(item -> item.values().stream())
