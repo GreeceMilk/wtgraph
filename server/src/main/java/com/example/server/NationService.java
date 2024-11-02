@@ -22,12 +22,6 @@ import com.example.server.nationab.*;
 @Service
 public class NationService {
 
-    private final NationRb1Repo nationRb1Repo;
-    private final NationRb0Repo nationRb0Repo;
-    private final NationRbAllRepo nationRbAllRepo;
-    private final NationAb0Repo nationAb0repo;
-    private final NationAb1Repo nationAb1repo;
-    private final NationAbAllRepo nationAbAllRepo;
     private final Map<String, NationRepo<? extends Nation, ObjectId>> repoMap;
 
     @Autowired
@@ -37,12 +31,6 @@ public class NationService {
     public NationService(NationRb1Repo nationRb1Repo, NationRb0Repo nationRb0Repo, NationRbAllRepo nationRbAllRepo,
                          NationAb0Repo nationAb0repo, NationAb1Repo nationAb1repo, NationAbAllRepo nationAbAllRepo,
                          MongoTemplate mongoTemplate) {
-        this.nationRb1Repo = nationRb1Repo;
-        this.nationRb0Repo = nationRb0Repo;
-        this.nationRbAllRepo = nationRbAllRepo;
-        this.nationAb0repo = nationAb0repo;
-        this.nationAb1repo = nationAb1repo;
-        this.nationAbAllRepo = nationAbAllRepo;
         this.mongoTemplate = mongoTemplate;
         this.repoMap = Map.of(
             "rb1", nationRb1Repo,
