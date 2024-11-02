@@ -103,7 +103,7 @@ public class NationService {
         if (repo == null) {
             return List.of();
         } else {
-            List<NationData> nationData = repo.findByNationAndCls(nation, cls, output, lowerBr);
+            List<NationData> nationData = repo.findByNationAndCls(nation, cls, output, mode+"_lower_br", lowerBr);
             // TODO: add sort after getting data Sort sort = Sort.by("date").ascending();
             if (nationData.isEmpty()) {
                 return List.of();
