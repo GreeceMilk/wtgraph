@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import com.example.server.nationrb.*;
 import com.example.server.nationab.*;
 import com.example.server.nationsb.*;
+import com.fasterxml.jackson.databind.ser.std.StdArraySerializers.DoubleArraySerializer;
 
 @Service
 public class NationService {
@@ -86,8 +87,8 @@ public class NationService {
 
     // get list of br according to cls and nation
     List<Double> getBrList(String mode, String brRange, String nation, String cls) {
-        if (brRange == "All") {
-            return List.of(1d);
+        if (brRange.equals("all")) {
+            return List.of(1.0);
         } else {
             Aggregation brList = Aggregation.newAggregation(Aggregation.match(new Criteria("nation").is(nation).and("cls").is(cls)), Aggregation.group( mode + "_lower_br"), Aggregation.sort(Sort.by("_id")));
             AggregationResults<Map<String, Double>> result = mongoTemplate.aggregate(brList, mode + "_ranks_" + brRange, (Class<Map<String, Double>>)(Class<?>)Map.class);
