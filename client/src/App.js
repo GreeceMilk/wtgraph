@@ -50,7 +50,7 @@ function App() {
   }
   // useEffect(() => {getT();},[]);
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme} defaultMode='light'>
       <div className="App">
         <Routes>
           <Route path="/" element = {<Layout/>}>
