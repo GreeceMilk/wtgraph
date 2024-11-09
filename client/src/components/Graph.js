@@ -4,13 +4,21 @@ import {Line} from 'react-chartjs-2';
 import {Chart, registerables} from 'chart.js';
 import "chartjs-adapter-date-fns";
 
-import { Box, TextField, Autocomplete } from '@mui/material';
+import { Box, TextField, Autocomplete, Button } from '@mui/material';
 import { set } from 'date-fns';
 
 // import { parseISO } from 'date-fns';
 
 const modes = ['ab', 'rb', 'sb'];
 const brRanges = ['0', '1', 'all']
+const outputList = [
+    "win_rate",
+    "battles_sum",
+    "battles_mean",
+    "ground_frags_per_battle", 
+    "ground_frags_per_death",
+    "air_frags_per_battle",
+    "air_frags_per_death"];
 
 Chart.register(...registerables);
 
@@ -31,23 +39,40 @@ const Graph = () => {
     const [isLowerBrDisabled, setIsLowerBrDisabled] = useState(true);
     const [lowerBrList, setLowerBrList] = useState([]);
 
+    const [output, setOutput] = useState(null);
+
+    const [dataSetName, setDataSetName] = useState("");
+
     function areAllObjectsValid(array) {
         return array.every((element) => element !== undefined && element !== null);
     }
 
     async function getData() {
-        const response = await api.get("/api/nationData", 
-            {params: {mode: mode, brRange: brRange, nation: nation, cls: cls, output: mode+"_battles_mean", lowerBr: lowerBr}});
-        let temp = {
-            datasets: [{
-                label: "test",
-                data: response.data,
-            }]
-        };
-        console.log("Temp: ", temp);
-        setData(temp);
-        // console.log("Response: ", response);
-        // console.log(data);
+        if (areAllObjectsValid([mode, brRange, nation, cls, lowerBr, output])) {
+            try {
+                const response = await api.get("/api/nationData", 
+                    {params: {mode: mode, brRange: brRange, nation: nation, cls: cls, output: mode+"_"+output.replaceAll(" ", "_"), lowerBr: lowerBr}});
+                let temp = {
+                    datasets: [{
+                        label: "test",
+                        data: response.data,
+                    }]
+                };
+                console.log("Data: ", response.data);
+                setData(temp);
+            } catch (error) {
+                console.log(error);
+                console.log("Parameter incorrect");
+                console.log("mode: ", mode);
+                console.log("brRange: ", brRange);
+                console.log("nation: ", nation);
+                console.log("cls: ", cls);
+                console.log("lowerBr: ", lowerBr);
+                console.log("output: ", output);
+            }
+        } else {
+            console.log("Parameter is null or undefined");
+        }
     }
 
     async function getNationList() {
@@ -74,15 +99,17 @@ const Graph = () => {
         }
     }
 
-    // useEffect(() => {getData();},[]);
+    function saveDataset() {
+
+    }
 
     useEffect(() => { 
         // console.log("Mode is"+mode); console.log("brRagne is" + brRange);
         setNation(null); setNationList([]); 
-        console.log("Initial nation", nation);
+        // console.log("Initial nation", nation);
         const isValid = areAllObjectsValid([mode, brRange]);
         setIsNationDisabled(!isValid);
-        console.log("Nation enabled: ", isValid);
+        // console.log("Nation enabled: ", isValid);
         if (isValid) {
             try {
                 getNationList();
@@ -124,14 +151,22 @@ const Graph = () => {
 
     useEffect(() => {
         setData(null);
-        if (areAllObjectsValid([mode, brRange, nation, cls, lowerBr])) {
-            try {
-                getData();
-            } catch (error) {
-                console.log(error);
-            }
-        }
+        getData();
     }, [lowerBr])
+
+    useEffect(() => {
+        setData(null);
+        getData();
+        console.log("Output: ", output);
+    }, [output])
+
+    useEffect(() => {
+        if (data) {
+            setDataSetName(mode+" "+brRange+" "+nation+" "+cls+" "+lowerBr+" "+output);
+        } else {
+            setDataSetName("");
+        }
+    }, [data])
 
     const options = {
         parsing: {
@@ -241,6 +276,22 @@ const Graph = () => {
                 renderInput={(params) => <TextField {...params} label="Lower Br" />}
                 sx={{width: 300}}
             />
+            
+            <Autocomplete
+                id='output'
+                options={outputList.map((element) => element.replaceAll("_", " "))}
+                onChange={(event, newValue) => {
+                    setOutput(newValue);
+                }}
+                renderInput={(params) => <TextField {...params} label="Output field" />}
+                sx={{width: 300}}
+            />
+
+            <TextField required id="dataset name" label="Enter Dataset Name" variant="outlined" 
+                        value={dataSetName}  sx={{width: 300}}/>
+
+            <Button variant="outlined" onClick={saveDataset}>Get Data</Button>
+
             <div width="800" height="400">
                 {data?<Line data={data} options={options} />:null}
             </div>
