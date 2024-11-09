@@ -44,7 +44,7 @@ public class Controller {
 	
 	
 	@GetMapping("/nationData")
-	public ResponseEntity<List<NationData>> getNationData(@RequestParam String mode, @RequestParam String brRange, @RequestParam String nation, @RequestParam String cls, @RequestParam String output, @RequestParam Integer lowerBr) {
+	public ResponseEntity<List<NationData>> getNationData(@RequestParam String mode, @RequestParam String brRange, @RequestParam String nation, @RequestParam String cls, @RequestParam String output, @RequestParam Double lowerBr) {
 		//TODO: add time frame filler
 		List<NationData> returnValue = nationService.getNationData(mode, brRange, cls, nation, output, lowerBr);
 		return new ResponseEntity<List<NationData>>(returnValue, returnValue.isEmpty()?HttpStatus.NO_CONTENT: HttpStatus.OK);

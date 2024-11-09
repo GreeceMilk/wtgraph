@@ -99,7 +99,7 @@ public class NationService {
     }
 
     // get a nation's data according to cls, nation, and output field
-    List<NationData> getNationData(String mode, String brRange, String cls, String nation, String output, Integer lowerBr) {
+    List<NationData> getNationData(String mode, String brRange, String cls, String nation, String output, Double lowerBr) {
         NationRepo<? extends Nation, ObjectId> repo = chooseDb(mode, brRange);
         if (repo == null) {
             return List.of();
@@ -113,4 +113,5 @@ public class NationService {
             }
         }
     }
+
 }
