@@ -3,9 +3,13 @@ import api from '../api/axiosConfig.js';
 import {Line} from 'react-chartjs-2';
 import {Chart, registerables} from 'chart.js';
 import "chartjs-adapter-date-fns";
+import autocolors from 'chartjs-plugin-autocolors';
+import {v4 as uuidv4} from 'uuid'
 
 import { Box, TextField, Autocomplete, Button } from '@mui/material';
 import { set } from 'date-fns';
+
+import DatasetList from './DatasetList.js';
 
 // import { parseISO } from 'date-fns';
 
@@ -20,10 +24,10 @@ const outputList = [
     "air_frags_per_battle",
     "air_frags_per_death"];
 
-Chart.register(...registerables);
+Chart.register(...registerables, autocolors);
 
 const Graph = () => {
-    const [data, setData] = useState(null);
+    const [data, setData] = useState({datasets:[]});
     const [mode, setMode] = useState(null);
     const [brRange, setBrRange] = useState(null);
 
@@ -42,6 +46,7 @@ const Graph = () => {
     const [output, setOutput] = useState(null);
 
     const [dataSetName, setDataSetName] = useState("");
+    const [isDataSetNameDisabled, setIsDataSetNameDisabled] = useState(true);
 
     function areAllObjectsValid(array) {
         return array.every((element) => element !== undefined && element !== null);
@@ -53,13 +58,19 @@ const Graph = () => {
                 const response = await api.get("/api/nationData", 
                     {params: {mode: mode, brRange: brRange, nation: nation, cls: cls, output: mode+"_"+output.replaceAll(" ", "_"), lowerBr: lowerBr}});
                 let temp = {
-                    datasets: [{
-                        label: "test",
-                        data: response.data,
-                    }]
+                    id: uuidv4(),
+                    label: "dataset",
+                    data: response.data,
+                    saved: false,
                 };
-                console.log("Data: ", response.data);
-                setData(temp);
+                if (data.datasets.length === 0 || data.datasets[data.datasets.length - 1].saved) {
+                    setData({datasets: [...data.datasets, temp]});
+                } else {
+                    let tempData = data.datasets;
+                    tempData[tempData.length - 1] = temp;
+                    setData({datasets: tempData});
+                }
+                console.log("Data received: ", response.data);
             } catch (error) {
                 console.log(error);
                 console.log("Parameter incorrect");
@@ -100,7 +111,28 @@ const Graph = () => {
     }
 
     function saveDataset() {
+        if (data && data.datasets.length > 0) {
+            console.log("Saving dataset: ", dataSetName);
+            // data.datasets[data.datasets.length - 1].label = dataSetName;
+            // data.datasets[data.datasets.length - 1].saved = true;
+            setData({datasets: [...data.datasets.slice(0, data.datasets.length - 1), 
+                {id: data.datasets[data.datasets.length - 1].id, label: dataSetName, data: data.datasets[data.datasets.length - 1].data, saved: true}]});
+        } else {
+            console.log("Data is not saved");
+        }
+        console.log("Data: ", data);
+        setMode(null);
+        setBrRange(null);
+    }
 
+    function resetLastDataset() {
+        if (data.datasets.length > 0 && !data.datasets[data.datasets.length - 1].saved) {
+            setData({datasets: data.datasets.slice(0, data.datasets.length - 1)});
+        }
+    }
+
+    function deleteItem(id) {
+        setData({datasets: data.datasets.filter((data) => data.id !== id)});
     }
 
     useEffect(() => { 
@@ -150,20 +182,22 @@ const Graph = () => {
     }, [cls])
 
     useEffect(() => {
-        setData(null);
+        resetLastDataset();
         getData();
     }, [lowerBr])
 
     useEffect(() => {
-        setData(null);
+        resetLastDataset();
         getData();
         console.log("Output: ", output);
     }, [output])
 
     useEffect(() => {
-        if (data) {
+        if (data.datasets.length > 0 && !data.datasets[data.datasets.length - 1].saved) {
+            setIsDataSetNameDisabled(false);
             setDataSetName(mode+" "+brRange+" "+nation+" "+cls+" "+lowerBr+" "+output);
         } else {
+            setIsDataSetNameDisabled(true);
             setDataSetName("");
         }
     }, [data])
@@ -178,6 +212,7 @@ const Graph = () => {
                 display: true,
                 text: "test",
             },
+            autocolors,
         },
         scales: {
             x: {
@@ -226,6 +261,7 @@ const Graph = () => {
         <div>
             <Autocomplete
                 id='mode'
+                value={mode}
                 options={modes}
                 onChange={(event, newValue) => {
                     setMode(newValue);
@@ -235,6 +271,7 @@ const Graph = () => {
             />
             <Autocomplete
                 id='brRange'
+                value={brRange}
                 options={brRanges}
                 onChange={(event, newValue) => {
                     setBrRange(newValue);
@@ -288,13 +325,15 @@ const Graph = () => {
             />
 
             <TextField required id="dataset name" label="Enter Dataset Name" variant="outlined" 
-                        value={dataSetName}  sx={{width: 300}}/>
+                        value={dataSetName} disabled={isDataSetNameDisabled} onChange={(event) => {setDataSetName(event.target.value)}}
+                        sx={{width: 300}}/>
 
-            <Button variant="outlined" onClick={saveDataset}>Get Data</Button>
+            <Button variant="outlined" onClick={saveDataset}>Save Data</Button>
 
             <div width="800" height="400">
                 {data?<Line data={data} options={options} />:null}
             </div>
+            <DatasetList datasets={data.datasets} deleteItem={deleteItem}/>
         </div>
     )
 }
