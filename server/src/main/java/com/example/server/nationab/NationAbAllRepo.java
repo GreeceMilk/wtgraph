@@ -1,9 +1,11 @@
 package com.example.server.nationab;
 
 import org.bson.types.ObjectId;
+import org.springframework.stereotype.Repository;
 
 import com.example.server.NationRepo;
 
-public interface NationAbAllRepo extends NationRepo<NationAb, ObjectId> {
+@Repository
+public interface NationAbAllRepo extends NationRepo<NationAbAll, ObjectId> {
 
 }

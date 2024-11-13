@@ -37,13 +37,13 @@ public class NationService {
         this.repoMap = Map.of(
             "rb1", nationRb1Repo,
             "rb0", nationRb0Repo,
-            "rbAll", nationRbAllRepo,
+            "rball", nationRbAllRepo,
             "ab1", nationAb1Repo,
             "ab0", nationAb0Repo,
-            "abAll", nationAbAllRepo,
+            "aball", nationAbAllRepo,
             "sb0", nationSb0Repo, 
             "sb1", nationSb1Repo,
-            "sbAll", nationSbAllRepo
+            "sball", nationSbAllRepo
         );
     }
 
