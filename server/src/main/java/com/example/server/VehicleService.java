@@ -3,6 +3,9 @@ package com.example.server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Date;
 
 @Service
 public class VehicleService {
@@ -19,5 +22,16 @@ public class VehicleService {
 
     List<VehicleData> getVehicleData(String name, String outputX, String outputY) {
         return vehicleRepo.findByNameAndOutput(name, outputX, outputY);
+    }
+
+    List<String> getOutputNames() {
+        List<String> outputNames = new ArrayList<String>();
+        for (Field field: Vehicle.class.getDeclaredFields()) {
+            field.setAccessible(true);
+            if (field.getType().equals(Double.class) || field.getType().equals(Date.class)) {
+                outputNames.add(field.getName());
+            }
+        }
+        return outputNames;
     }
 }

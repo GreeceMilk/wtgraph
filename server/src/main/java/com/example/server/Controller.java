@@ -68,5 +68,8 @@ public class Controller {
 		return new ResponseEntity<>(vehicleService.getVehicleData(wkName, outputX, outputY), HttpStatus.OK);
 	}
 	
-
+	@GetMapping("/outputList")
+	public ResponseEntity<List<String>> getOutputNames() {
+		return new ResponseEntity<>(vehicleService.getOutputNames(), HttpStatus.OK);
+	}
 }
