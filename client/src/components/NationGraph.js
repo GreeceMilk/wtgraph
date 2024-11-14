@@ -4,29 +4,30 @@ import {Line} from 'react-chartjs-2';
 import {Chart, registerables} from 'chart.js';
 import "chartjs-adapter-date-fns";
 import autocolors from 'chartjs-plugin-autocolors';
-import {v4 as uuidv4} from 'uuid'
+import {v4 as uuidv4} from 'uuid';
+import {modes, brRanges, outputListNation as outputList} from '../Util.js';
 
 import { Box, TextField, Autocomplete, Button } from '@mui/material';
-import { set } from 'date-fns';
+// import { set } from 'date-fns';
 
 import DatasetList from './DatasetList.js';
 
 // import { parseISO } from 'date-fns';
 
-const modes = ['ab', 'rb', 'sb'];
-const brRanges = ['0', '1', 'all']
-const outputList = [
-    "win_rate",
-    "battles_sum",
-    "battles_mean",
-    "ground_frags_per_battle", 
-    "ground_frags_per_death",
-    "air_frags_per_battle",
-    "air_frags_per_death"];
+// const modes = ['ab', 'rb', 'sb'];
+// const brRanges = ['0', '1', 'all']
+// const outputList = [
+//     "win_rate",
+//     "battles_sum",
+//     "battles_mean",
+//     "ground_frags_per_battle", 
+//     "ground_frags_per_death",
+//     "air_frags_per_battle",
+//     "air_frags_per_death"]
 
 Chart.register(...registerables, autocolors);
 
-const Graph = () => {
+const NationGraph = () => {
     const [data, setData] = useState({datasets:[]});
     const [mode, setMode] = useState(null);
     const [brRange, setBrRange] = useState(null);
@@ -339,4 +340,4 @@ const Graph = () => {
     )
 }
 
-export default Graph
+export default NationGraph
