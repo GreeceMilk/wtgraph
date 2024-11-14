@@ -21,6 +21,9 @@ public class Controller {
     @Autowired
     private NationService nationService;
 
+	@Autowired
+	private VehicleService vehicleService;
+
 	@GetMapping("/nation")
 	public ResponseEntity<Optional<Nation>> getNation(@RequestParam String mode, @RequestParam String brRange, @RequestParam ObjectId id) {
 		Optional<Nation> returnValue = nationService.getNation(mode, brRange, id);
@@ -45,9 +48,25 @@ public class Controller {
 	
 	@GetMapping("/nationData")
 	public ResponseEntity<List<NationData>> getNationData(@RequestParam String mode, @RequestParam String brRange, @RequestParam String nation, @RequestParam String cls, @RequestParam String output, @RequestParam Double lowerBr) {
-		//TODO: add time frame filler
+		// TODO: add ouput for x and y axis separatly
 		List<NationData> returnValue = nationService.getNationData(mode, brRange, cls, nation, output, lowerBr);
 		return new ResponseEntity<List<NationData>>(returnValue, returnValue.isEmpty()?HttpStatus.NO_CONTENT: HttpStatus.OK);
 	}
+
+	@GetMapping("/vehicleList")
+	public ResponseEntity<List<String>> getVehicleList(@RequestParam String nation, @RequestParam String cls, @RequestParam String mode, @RequestParam Double lowerBr, @RequestParam Double upperBr) {
+		return new ResponseEntity<List<String>>(vehicleService.getVehicleList(nation, cls, mode, lowerBr, upperBr), HttpStatus.OK);
+	}
+
+	@GetMapping("/vehicleBrList")
+	public ResponseEntity<List<Double>> getVehicleBr(@RequestParam String mode) {
+		return new ResponseEntity<>(vehicleService.getBrList(mode), HttpStatus.OK);
+	}
+
+	@GetMapping("/vehicleData")
+	public ResponseEntity<List<VehicleData>> getVehicleData(@RequestParam String wkName, @RequestParam String outputX, @RequestParam String outputY) {
+		return new ResponseEntity<>(vehicleService.getVehicleData(wkName, outputX, outputY), HttpStatus.OK);
+	}
+	
 
 }

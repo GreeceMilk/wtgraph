@@ -44,6 +44,7 @@ const Graph = () => {
     const [lowerBrList, setLowerBrList] = useState([]);
 
     const [output, setOutput] = useState(null);
+    // TODO: locking output after data is saved
 
     const [dataSetName, setDataSetName] = useState("");
     const [isDataSetNameDisabled, setIsDataSetNameDisabled] = useState(true);
