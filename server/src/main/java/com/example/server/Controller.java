@@ -70,6 +70,6 @@ public class Controller {
 	
 	@GetMapping("/outputList")
 	public ResponseEntity<List<String>> getOutputNames() {
-		return new ResponseEntity<>(vehicleService.getOutputNames(), HttpStatus.OK);
+		return new ResponseEntity<List<String>>(vehicleService.getOutputNames(), HttpStatus.OK);
 	}
 }
