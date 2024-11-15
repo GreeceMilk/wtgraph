@@ -246,7 +246,7 @@ const VehicleGraph = () => {
             setIsDataSetNameDisabled(true);
             setDataSetName("");
         }
-        if (data.datasets.length === 1 && !data.datasets[data.datasets.length - 1].saved) {
+        if (data.datasets.length === 0 || (data.datasets.length === 1 && !data.datasets[data.datasets.length - 1].saved)) {
             setIsOutputLocked(false);
         } else {
             setIsOutputLocked(true);
@@ -378,7 +378,8 @@ const VehicleGraph = () => {
             />
 
             <Autocomplete
-                id='output'
+                id='outputX'
+                disabled={isOutputLocked}
                 options={outputXList.map((element) => element.replaceAll("_", " "))}
                 onChange={(event, newValue) => {
                     setOutputX(newValue);
@@ -388,7 +389,8 @@ const VehicleGraph = () => {
             />
 
             <Autocomplete
-                id='output'
+                id='outputY'
+                disabled={isOutputLocked}
                 options={outputYList.map((element) => element.replaceAll("_", " "))}
                 onChange={(event, newValue) => {
                     setOutputY(newValue);
