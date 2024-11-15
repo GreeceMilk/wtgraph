@@ -7,6 +7,7 @@ import {createTheme, ThemeProvider, useColorScheme} from '@mui/material/styles';
 import Layout from './components/Layout';
 import Home from './components/Home';
 import NationGraph from './components/NationGraph';
+import VehicleGraph from './components/VehicleGraph';
 
 function App() {
   const theme = createTheme(
@@ -56,6 +57,7 @@ function App() {
           <Route path="/" element = {<Layout/>}>
             <Route path="/" element={<Home/>}> </Route>
             <Route path="/test" element={<NationGraph/>}></Route>
+            <Route path="/test1" element={<VehicleGraph/>}></Route>
           </Route>
         </Routes>
       </div>

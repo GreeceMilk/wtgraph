@@ -10,4 +10,12 @@ const outputListNation = [
     "air_frags_per_battle",
     "air_frags_per_death"];
 
-export { modes, brRanges, outputListNation };
+function convertSnakeToSpace(str) {
+    return str.replaceAll('_', ' ');
+}
+
+function convertSpaceToSnake(str) {
+    return str.replaceAll(' ', '_');
+}
+
+export { modes, brRanges, outputListNation, convertSnakeToSpace, convertSpaceToSnake};
