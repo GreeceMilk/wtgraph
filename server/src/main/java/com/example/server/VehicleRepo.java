@@ -18,7 +18,7 @@ public interface VehicleRepo extends MongoRepository<Vehicle, ObjectId> {
     @Query(value = "{'wk_name': ?0}")
     Optional<Vehicle> findByWkName(String WkName);
 
-    @Aggregation(pipeline = {"{$match: {'wk_name': ?0}}", "{$sort: {'?1': 1}}", "{$project: {'xData': '$?1', 'yData': '$?2'}}}"})
+    @Aggregation(pipeline = {"{$match: {'wk_name': ?0, ?2: {$ne: null}}}", "{$sort: {'?1': 1}}", "{$project: {'xData': '$?1', 'yData': '$?2'}}}"})
     List<VehicleData> findByNameAndOutput(String name, String outputX, String outputY);
 
     @Aggregation(pipeline = {"{$match: {'nation': ?0, 'cls': ?1}}", "{$project: {'wk_name': 1}}"})
