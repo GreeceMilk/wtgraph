@@ -2,56 +2,16 @@ import './App.css';
 import api from './api/axiosConfig';
 import {useState, useEffect} from 'react';
 import {Routes, Route} from 'react-router-dom'; 
-import {createTheme, ThemeProvider, useColorScheme} from '@mui/material/styles';
+import {createTheme, ThemeProvider} from '@mui/material/styles';
+import { CssBaseline } from '@mui/material';
 
 import Layout from './components/Layout';
 import Home from './components/Home';
 import NationGraph from './components/NationGraph';
 import VehicleGraph from './components/VehicleGraph';
 
-function App() {
-  const theme = createTheme(
-    {
-      colorSchemes: {
-        light: {
-          palette: {
-            primary: {
-              main: '#00838f',
-            },
-            secondary: {
-              main: '#ffc400',
-            },
-          },
-        },
-        dark: {
-          palette: {
-            primary: {
-              main: '#00838f',
-            },
-            secondary: {
-              main: '#ffc400',
-            },
-          },
-        },
-      }
-    }
-  )
-
-  const {mode, setMode} = useColorScheme();
-  const [t, setT] = useState();
-
-  async function getT() {
-    try {
-      const response = await api.get("/api/v1/test");
-      setT(response.data);
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
-    } 
-  }
-  // useEffect(() => {getT();},[]);
+function AppWorker() {
   return (
-    <ThemeProvider theme={theme} defaultMode='light'>
       <div className="App">
         <Routes>
           <Route path="/" element = {<Layout/>}>
@@ -61,8 +21,71 @@ function App() {
           </Route>
         </Routes>
       </div>
-    </ThemeProvider>
   );
+}
+
+const theme = createTheme(
+  {
+    colorSchemes: {
+      light: true, 
+      dark: true,
+      light: {
+        palette: {
+          primary: {
+            main: '#00838f',
+          },
+          secondary: {
+            main: '#ffc400',
+          },
+        },
+      },
+      dark: {
+        palette: {
+          primary: {
+            main: '#00838f',
+          },
+          secondary: {
+            main: '#ffc400',
+          },
+        },
+      },
+    }
+  }
+)
+
+function App() {
+
+  const light = createTheme({
+    palette: {
+      mode: 'light',
+      primary: {
+        main: '#1a2939',
+      },
+      secondary: {
+        main: '#d8a807',
+      },
+    },
+  });
+
+  const dark = createTheme({
+    palette: {
+      mode: 'dark',
+      primary: {
+        main: '#699bd8',
+      },
+      secondary: {
+        main: '#d8a807',
+      },
+    }
+  })
+
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline/>
+      <AppWorker/>
+    </ThemeProvider>
+  )
+
 }
 
 export default App;
