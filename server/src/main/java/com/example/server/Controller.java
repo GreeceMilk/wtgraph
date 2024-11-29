@@ -68,6 +68,11 @@ public class Controller {
 		return new ResponseEntity<>(vehicleService.getVehicleData(wkName, outputX, outputY), HttpStatus.OK);
 	}
 	
+	@GetMapping("/vehicleDataWithCount")	
+	public ResponseEntity<List<VehicleDataWithCount>> getVehicleDataWithCount(@RequestParam String wkName, @RequestParam String outputX, @RequestParam String outputY) {
+		return new ResponseEntity<>(vehicleService.getVehicleDataWithCount(wkName, outputX, outputY), HttpStatus.OK);
+	}
+	
 	@GetMapping("/outputList")
 	public ResponseEntity<List<String>> getOutputNames() {
 		return new ResponseEntity<List<String>>(vehicleService.getOutputNames(), HttpStatus.OK);

@@ -12,6 +12,8 @@ public class VehicleService {
     @Autowired
     private VehicleRepo vehicleRepo;
 
+    private int bubbleSize = 5;
+
     List<String> getVehicleList(String nation, String cls, String mode, Double lowerBr, Double upperBr) {
         return vehicleRepo.vehicleList(nation, cls, mode+"_br", lowerBr, upperBr);    
     }
@@ -22,6 +24,12 @@ public class VehicleService {
 
     List<VehicleData> getVehicleData(String name, String outputX, String outputY) {
         return vehicleRepo.findByNameAndOutput(name, outputX, outputY);
+    }
+
+    List<VehicleDataWithCount> getVehicleDataWithCount(String name, String outputX, String outputY) {
+        List<VehicleDataWithCount> returnValue = vehicleRepo.findByNameAndOutputNonUnique(name, outputX, outputY);
+        returnValue.forEach(data -> data.setR(data.getR() * bubbleSize));
+        return returnValue;
     }
 
     List<String> getOutputNames() {
