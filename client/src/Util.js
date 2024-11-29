@@ -1,3 +1,5 @@
+import "chartjs-adapter-date-fns"
+
 
 const modes = ['ab', 'rb', 'sb'];
 const brRanges = ['0', '1', 'all'];
@@ -17,5 +19,6 @@ function convertSnakeToSpace(str) {
 function convertSpaceToSnake(str) {
     return str.replaceAll(' ', '_');
 }
+
 
 export { modes, brRanges, outputListNation, convertSnakeToSpace, convertSpaceToSnake};

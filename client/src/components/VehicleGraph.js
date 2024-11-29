@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import api from '../api/axiosConfig.js';
-import {Line} from 'react-chartjs-2';
+import {Line, Scatter} from 'react-chartjs-2';
 import {Chart, registerables} from 'chart.js';
 import "chartjs-adapter-date-fns";
 import autocolors from 'chartjs-plugin-autocolors';
 import {v4 as uuidv4} from 'uuid'
+import Graph from './Graph.js';
 
-import {modes, convertSpaceToSnake} from '../Util.js';
+import {modes, convertSpaceToSnake, chooseGraph, graphOptions} from '../Util.js';
 
-import { Box, TextField, Autocomplete, Button, Slider } from '@mui/material';
+import { Box, TextField, Autocomplete, Button, Slider, Container, Grid2 as Grid } from '@mui/material';
 // import { set } from 'date-fns';
 
 import DatasetList from './DatasetList.js';
 import { setDefaultOptions } from 'date-fns';
 
-Chart.register(...registerables);
+Chart.register(...registerables, autocolors);
 
 const VehicleGraph = () => {
     const [data, setData] = useState({datasets:[]});
@@ -47,6 +48,8 @@ const VehicleGraph = () => {
     const [dataSetName, setDataSetName] = useState("");
     const [isDataSetNameDisabled, setIsDataSetNameDisabled] = useState(true);
 
+    const [toExcludeZeros, setToExcludeZeros] = useState(false);
+
     const timeoutRef = React.useRef(null);
     const timeout = 500;
 
@@ -57,7 +60,7 @@ const VehicleGraph = () => {
     async function getData() {
         if (areAllObjectsValid([vehicle, outputX, outputY])) {
             try {
-                const response = await api.get("/api/vehicleData", 
+                const response = await api.get(outputX === "date"?"/api/vehicleData":"/api/vehicleDataWithCount", 
                     {params: {wkName: vehicle, outputX: convertSpaceToSnake(outputX), outputY: convertSpaceToSnake(outputY)}});
                 let temp = {
                     id: uuidv4(),
@@ -161,6 +164,12 @@ const VehicleGraph = () => {
         setBrRange([parseFloat(brList[0]), parseFloat(brList[brList.length - 1])]);
     }
 
+    function excludeZeros() {
+        let temp = data.datasets[data.datasets.length - 1].data.filter((element) => element.ydata !== 0);
+        setData({datasets: [...data.datasets.slice(0, data.datasets.length - 1), 
+            {id: data.datasets[data.datasets.length - 1].id, label: data.datasets[data.datasets.length - 1].label, data: temp, saved: false}]});
+    }
+
     useEffect(() => {
         getBrList();
         getNationList();
@@ -183,9 +192,10 @@ const VehicleGraph = () => {
     
     
     useEffect(() => {
+        resetLastDataset();
         setOutputY(null);
         if (outputX) {
-            const temp = outputXList.filter((element) => element !== outputX);
+            const temp = outputXList.filter((element) => element !== outputX && element !== "date");
             setOutputYList(temp);
         }
     }, [outputX])
@@ -236,7 +246,7 @@ const VehicleGraph = () => {
         getData();
         console.log("OutputX: ", outputX);
         console.log("OutputY: ", outputY);
-    }, [outputX, outputY, vehicle])
+    }, [outputY, vehicle])
 
     useEffect(() => {
         if (data.datasets.length > 0 && !data.datasets[data.datasets.length - 1].saved) {
@@ -259,157 +269,139 @@ const VehicleGraph = () => {
     }, [brList, brRange])
 
     
+    useEffect(() => {
+        if (toExcludeZeros && data.datasets.length > 0 && !data.datasets[data.datasets.length - 1].saved) {
+            excludeZeros();
+        } else {
+            setToExcludeZeros(false);
+            getData();
+            console.log("Get data");
+        }
+    }, [toExcludeZeros])
+    
 
-
-    const options = {
-        parsing: {
-            xAxisKey: "xdata", 
-            yAxisKey: "ydata",
-        },
-        plugins: {
-            title: {
-                display: true,
-                text: "test",
-            },
-        },
-        scales: {
-            x: {
-                // border: {
-                //     color: "#d4d4d4",
-                // },
-                // ticks: {
-                //     color: "#d4d4d4",
-                // },
-                type: "time",
-                time: {
-                    // parser: "yyyy-MM-dd",
-                    // displayFormats: {
-                    //     day: "yy-MM-dd",
-                    // },
-                    unit: "month",
-                    tooltipFormat: "yy-MM-dd",
-                },
-                // title: {
-                //     display: true,
-                //     text: "Date",
-                // }
-                // ticks: {
-                //     source: "data",
-                // },
-            },
-            y: {
-                // suggestedMin: 0,
-                // suggestedMax: 13,
-                border: {
-                    color: "#d4d4d4",
-                },
-                ticks: {
-                    color: "#d4d4d4",
-                },
-            },
-        },
-        elements: {
-            point: {
-                pointStyle: false,
-            },
-        },
-        // clip: 2,
-    }
     return (
-        <div>
-            <Autocomplete
-                value={nation}
-                // disabled={isNationDisabled}
-                id='nation'
-                options={nationList}
-                onChange={(event, newValue) => {
-                    setNation(newValue);
-                }}
-                renderInput={(params) => <TextField {...params} label="Nation" />}
-                sx={{width: 300}}
-            />
+        <Container maxWidth="lg">
+            <Grid container spacing={2}>
+                <Grid size={4}>
+                    <Box sx={{backgroundColor: "info.light", borderRadius: 5, p: 2, textAlign: 'center'}}>
+                        <Autocomplete
+                            value={nation}
+                            // disabled={isNationDisabled}
+                            id='nation'
+                            options={nationList}
+                            onChange={(event, newValue) => {
+                                setNation(newValue);
+                            }}
+                            renderInput={(params) => <TextField {...params} label="Nation" />}
+                            sx={{width: 300}}
+                        />
 
-            <Autocomplete
-                value={cls}
-                disabled={isClsDisabled}
-                id='cls'
-                options={clsList}
-                onChange={(event, newValue) => {
-                    setCls(newValue);
-                }}
-                renderInput={(params) => <TextField {...params} label="Cls" />}
-                sx={{width: 300}}
-            />
+                        <Autocomplete
+                            value={cls}
+                            disabled={isClsDisabled}
+                            id='cls'
+                            options={clsList}
+                            onChange={(event, newValue) => {
+                                setCls(newValue);
+                            }}
+                            renderInput={(params) => <TextField {...params} label="Cls" />}
+                            sx={{width: 300}}
+                        />
 
-            <Autocomplete
-                id='mode'
-                value={mode}
-                options={modes}
-                onChange={(event, newValue) => {
-                    setMode(newValue);
-                }}
-                renderInput={(params) => <TextField {...params} label="Mode" />}
-                sx={{width: 300}}
-            />
-            <Box sx={{width: 300}}>
-                <Slider 
-                    disabled={isBrListDisabled}
-                    step={null}
-                    marks={isBrListDisabled?null:brList.map((element) => {return {value: parseFloat(element)}})}
-                    valueLabelDisplay='auto'
-                    value={brRange}
-                    onChange={(event, newValue) => {setBrRange(newValue)}}
-                    min={isBrListDisabled?0:parseFloat(brList[0])}
-                    max={isBrListDisabled?0:parseFloat(brList[brList.length - 1])}
-                />
-            </Box> 
+                        <Autocomplete
+                            id='mode'
+                            value={mode}
+                            options={modes}
+                            onChange={(event, newValue) => {
+                                setMode(newValue);
+                            }}
+                            renderInput={(params) => <TextField {...params} label="Mode" />}
+                            sx={{width: 300}}
+                        />
+                        <Box sx={{width: 300}}>
+                            <Slider 
+                                disabled={isBrListDisabled}
+                                step={null}
+                                marks={isBrListDisabled?null:brList.map((element) => {return {value: parseFloat(element)}})}
+                                valueLabelDisplay='auto'
+                                value={brRange}
+                                onChange={(event, newValue) => {setBrRange(newValue)}}
+                                min={isBrListDisabled?0:parseFloat(brList[0])}
+                                max={isBrListDisabled?0:parseFloat(brList[brList.length - 1])}
+                            />
+                        </Box> 
 
-            <Autocomplete
-                loading={isVehicleListLoading}
-                value={vehicle}
-                disabled={isVehicleDisabled}
-                id='vehicle'
-                options={vehicleList}
-                onChange={(event, newValue) => {
-                    setVehicle(newValue);
-                }}
-                renderInput={(params) => <TextField {...params} label="Vehicle" />}
-                sx={{width: 300}}
-            />
+                        <Autocomplete
+                            loading={isVehicleListLoading}
+                            value={vehicle}
+                            disabled={isVehicleDisabled}
+                            id='vehicle'
+                            options={vehicleList}
+                            onChange={(event, newValue) => {
+                                setVehicle(newValue);
+                            }}
+                            renderInput={(params) => <TextField {...params} label="Vehicle" />}
+                            sx={{width: 300}}
+                        />
 
-            <Autocomplete
-                id='outputX'
-                disabled={isOutputLocked}
-                options={outputXList.map((element) => element.replaceAll("_", " "))}
-                onChange={(event, newValue) => {
-                    setOutputX(newValue);
-                }}
-                renderInput={(params) => <TextField {...params} label="Output field" />}
-                sx={{width: 300}}
-            />
+                        <Autocomplete
+                            id='outputX'
+                            value={outputX}
+                            disabled={isOutputLocked}
+                            options={outputXList.map((element) => element.replaceAll("_", " "))}
+                            onChange={(event, newValue) => {
+                                setOutputX(newValue);
+                            }}
+                            renderInput={(params) => <TextField {...params} label="Output field" />}
+                            sx={{width: 300}}
+                        />
 
-            <Autocomplete
-                id='outputY'
-                disabled={isOutputLocked}
-                options={outputYList.map((element) => element.replaceAll("_", " "))}
-                onChange={(event, newValue) => {
-                    setOutputY(newValue);
-                }}
-                renderInput={(params) => <TextField {...params} label="Output field" />}
-                sx={{width: 300}}
-            />
+                        <Autocomplete
+                            id='outputY'
+                            value={outputY}
+                            disabled={isOutputLocked}
+                            options={outputYList.map((element) => element.replaceAll("_", " "))}
+                            onChange={(event, newValue) => {
+                                setOutputY(newValue);
+                            }}
+                            renderInput={(params) => <TextField {...params} label="Output field" />}
+                            sx={{width: 300}}
+                        />
 
-            <TextField required id="dataset name" label="Enter Dataset Name" variant="outlined" 
-                        value={dataSetName} disabled={isDataSetNameDisabled} onChange={(event) => {setDataSetName(event.target.value)}}
-                        sx={{width: 300}}/>
+                    </Box>
 
-            <Button variant="outlined" onClick={saveDataset}>Save Data</Button>
+                </Grid>
+                <Grid size={6}>
+                    <Box sx={{ p: 2, textAlign: 'center'}}>
+                        <DatasetList datasets={data.datasets} deleteItem={deleteItem}/>
+                    </Box>
+                </Grid>
+                <Grid size={12}>
+                    <Box sx={{p: 2, textAlign: 'center'}}>
+                        <TextField required id="dataset name" label="Enter Dataset Name" variant="outlined" 
+                                    value={dataSetName} disabled={isDataSetNameDisabled} onChange={(event) => {setDataSetName(event.target.value)}}
+                                    sx={{width: 300}}/>
+                        <Button variant="outlined" onClick={saveDataset}>Save Data</Button>
+                    </Box>
+                </Grid>
+                <Grid size={12}>
+                    <div width="800" height="400">
+                        <Graph data={data} outputX={outputX}></Graph>
+                    </div>
+                </Grid>
 
-            <div width="800" height="400">
-                {data?<Line data={data} options={options} />:null}
-            </div>
-            <DatasetList datasets={data.datasets} deleteItem={deleteItem}/>
-        </div>
+
+            </Grid>
+                {/*
+                
+            <FormGroup>
+                <FormControlLabel control={<Switch checked={toExcludeZeros} onChange={(event, newValue) => {setToExcludeZeros(newValue)}}/>} label="Exclude Zeros"/> 
+            </FormGroup>
+
+            */}
+            
+        </Container>
     )
 }
 
