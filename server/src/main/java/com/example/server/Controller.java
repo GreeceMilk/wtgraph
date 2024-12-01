@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.data.util.Pair;
+
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -54,8 +56,8 @@ public class Controller {
 	}
 
 	@GetMapping("/vehicleList")
-	public ResponseEntity<List<String>> getVehicleList(@RequestParam String nation, @RequestParam String cls, @RequestParam String mode, @RequestParam Double lowerBr, @RequestParam Double upperBr) {
-		return new ResponseEntity<List<String>>(vehicleService.getVehicleList(nation, cls, mode, lowerBr, upperBr), HttpStatus.OK);
+	public ResponseEntity<List<VehicleName>> getVehicleList(@RequestParam String nation, @RequestParam String cls, @RequestParam String mode, @RequestParam Double lowerBr, @RequestParam Double upperBr) {
+		return new ResponseEntity<List<VehicleName>>(vehicleService.getVehicleList(nation, cls, mode, lowerBr, upperBr), HttpStatus.OK);
 	}
 
 	@GetMapping("/vehicleBrList")
@@ -64,13 +66,13 @@ public class Controller {
 	}
 
 	@GetMapping("/vehicleData")
-	public ResponseEntity<List<VehicleData>> getVehicleData(@RequestParam String wkName, @RequestParam String outputX, @RequestParam String outputY) {
-		return new ResponseEntity<>(vehicleService.getVehicleData(wkName, outputX, outputY), HttpStatus.OK);
+	public ResponseEntity<List<VehicleData>> getVehicleData(@RequestParam String name, @RequestParam String outputX, @RequestParam String outputY) {
+		return new ResponseEntity<>(vehicleService.getVehicleData(name, outputX, outputY), HttpStatus.OK);
 	}
 	
 	@GetMapping("/vehicleDataWithCount")	
-	public ResponseEntity<List<VehicleDataWithCount>> getVehicleDataWithCount(@RequestParam String wkName, @RequestParam String outputX, @RequestParam String outputY) {
-		return new ResponseEntity<>(vehicleService.getVehicleDataWithCount(wkName, outputX, outputY), HttpStatus.OK);
+	public ResponseEntity<List<VehicleDataWithCount>> getVehicleDataWithCount(@RequestParam String name, @RequestParam String outputX, @RequestParam String outputY) {
+		return new ResponseEntity<>(vehicleService.getVehicleDataWithCount(name, outputX, outputY), HttpStatus.OK);
 	}
 	
 	@GetMapping("/outputList")

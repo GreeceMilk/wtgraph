@@ -1,6 +1,7 @@
 package com.example.server;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.lang.reflect.Field;
@@ -14,7 +15,7 @@ public class VehicleService {
 
     private int bubbleSize = 5;
 
-    List<String> getVehicleList(String nation, String cls, String mode, Double lowerBr, Double upperBr) {
+    List<VehicleName> getVehicleList(String nation, String cls, String mode, Double lowerBr, Double upperBr) {
         return vehicleRepo.vehicleList(nation, cls, mode+"_br", lowerBr, upperBr);    
     }
 
