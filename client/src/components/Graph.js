@@ -92,7 +92,7 @@ function chooseGraph(data, outputX) {
     } else if (outputX === "date") {
         return (<Line data={data} options={graphOptions(data)}></Line>);
     } else {
-        return (<Bubble data={data} options={graphOptions(data)}></Bubble>);
+        return (<Scatter data={data} options={graphOptions(data)}></Scatter>);
     }
 }
 
