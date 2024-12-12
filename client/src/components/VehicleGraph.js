@@ -296,6 +296,7 @@ const VehicleGraph = ({data, setData, outputX, setOutputX, setDataSetName, setIs
                         onChange={(event, newValue) => {setBrRange(newValue)}}
                         min={isBrListDisabled?0:parseFloat(brList[0])}
                         max={isBrListDisabled?0:parseFloat(brList[brList.length - 1])}
+                        color='secondary.dark'
                     />
                 </Box> 
 
