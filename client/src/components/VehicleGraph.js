@@ -9,7 +9,7 @@ import Graph from './Graph.js';
 
 import {modes, convertSpaceToSnake, chooseGraph, graphOptions} from '../Util.js';
 
-import { Box, TextField, Autocomplete, Button, Slider, Container, Grid2 as Grid } from '@mui/material';
+import { Box, TextField, Autocomplete, Button, Slider, Container, Grid2 as Grid, Stack, Typography, FormGroup, FormControlLabel, Switch } from '@mui/material';
 // import { set } from 'date-fns';
 
 import DatasetList from './DatasetList.js';
@@ -61,7 +61,7 @@ const VehicleGraph = () => {
         if (areAllObjectsValid([vehicle, outputX, outputY])) {
             try {
                 const response = await api.get(outputX === "date"?"/api/vehicleData":"/api/vehicleDataWithCount", 
-                    {params: {wkName: vehicle, outputX: convertSpaceToSnake(outputX), outputY: convertSpaceToSnake(outputY)}});
+                    {params: {name: vehicle.name, outputX: convertSpaceToSnake(outputX), outputY: convertSpaceToSnake(outputY)}});
                 let temp = {
                     id: uuidv4(),
                     label: "new dataset",
@@ -70,12 +70,11 @@ const VehicleGraph = () => {
                 };
                 if (data.datasets.length === 0 || data.datasets[data.datasets.length - 1].saved) {
                     setData({datasets: [...data.datasets, temp]});
+                    console.log("Dataset added", temp);
                 } else {
-                    let tempData = data.datasets;
-                    tempData[tempData.length - 1] = temp;
-                    setData({datasets: tempData});
+                    setData({datasets: [...data.datasets.slice(0, data.datasets.length - 1), temp]});
+                    console.log("Dataset replaced", temp);
                 }
-                console.log("Data received: ", response.data);
             } catch (error) {
                 console.log(error);
                 console.log("Parameter incorrect");
@@ -242,7 +241,7 @@ const VehicleGraph = () => {
     }, [mode, brRange, nation, cls]);
 
     useEffect(() => {
-        resetLastDataset();
+        // resetLastDataset();
         getData();
         console.log("OutputX: ", outputX);
         console.log("OutputY: ", outputY);
@@ -251,7 +250,7 @@ const VehicleGraph = () => {
     useEffect(() => {
         if (data.datasets.length > 0 && !data.datasets[data.datasets.length - 1].saved) {
             setIsDataSetNameDisabled(false);
-            setDataSetName(vehicle+" "+outputX+" "+outputY);
+            setDataSetName(vehicle.label+" "+outputX+" "+outputY);
         } else {
             setIsDataSetNameDisabled(true);
             setDataSetName("");
@@ -269,111 +268,138 @@ const VehicleGraph = () => {
     }, [brList, brRange])
 
     
-    useEffect(() => {
-        if (toExcludeZeros && data.datasets.length > 0 && !data.datasets[data.datasets.length - 1].saved) {
-            excludeZeros();
-        } else {
-            setToExcludeZeros(false);
-            getData();
-            console.log("Get data");
-        }
-    }, [toExcludeZeros])
+    // useEffect(() => {
+    //     if (toExcludeZeros && data.datasets.length > 0 && !data.datasets[data.datasets.length - 1].saved) {
+    //         excludeZeros();
+    //     } else {
+    //         getData();
+    //         console.log("Get data");
+    //         console.log("To exclude zeros: ", toExcludeZeros);
+    //     }
+    // }, [toExcludeZeros])
     
 
     return (
         <Container maxWidth="lg">
             <Grid container spacing={2}>
-                <Grid size={4}>
-                    <Box sx={{backgroundColor: "info.light", borderRadius: 5, p: 2, textAlign: 'center'}}>
-                        <Autocomplete
-                            value={nation}
-                            // disabled={isNationDisabled}
-                            id='nation'
-                            options={nationList}
-                            onChange={(event, newValue) => {
-                                setNation(newValue);
-                            }}
-                            renderInput={(params) => <TextField {...params} label="Nation" />}
-                            sx={{width: 300}}
-                        />
+                <Grid size={6} display={"flex"} justifyContent={"center"} alignItems={"center"}>
+                        <Box sx={{border: 2, borderColor: "info.light", borderRadius: 5,  p: 2, textAlign: 'center'}}>
+                            <Grid container direction={"column"} spacing={2}>
+                                <Grid size={'auto'}>
+                                    <Autocomplete
+                                        value={nation}
+                                        // disabled={isNationDisabled}
+                                        id='nation'
+                                        options={nationList}
+                                        onChange={(event, newValue) => {
+                                            setNation(newValue);
+                                        }}
+                                        renderInput={(params) => <TextField {...params} label="Nation" />}
+                                        sx={{width: 300}}
+                                    />
 
-                        <Autocomplete
-                            value={cls}
-                            disabled={isClsDisabled}
-                            id='cls'
-                            options={clsList}
-                            onChange={(event, newValue) => {
-                                setCls(newValue);
-                            }}
-                            renderInput={(params) => <TextField {...params} label="Cls" />}
-                            sx={{width: 300}}
-                        />
+                                </Grid>
+                                <Grid size={'auto'}>
+                                    <Autocomplete
+                                        value={cls}
+                                        disabled={isClsDisabled}
+                                        id='cls'
+                                        options={clsList}
+                                        onChange={(event, newValue) => {
+                                            setCls(newValue);
+                                        }}
+                                        renderInput={(params) => <TextField {...params} label="Cls" />}
+                                        sx={{width: 300}}
+                                    />
 
-                        <Autocomplete
-                            id='mode'
-                            value={mode}
-                            options={modes}
-                            onChange={(event, newValue) => {
-                                setMode(newValue);
-                            }}
-                            renderInput={(params) => <TextField {...params} label="Mode" />}
-                            sx={{width: 300}}
-                        />
-                        <Box sx={{width: 300}}>
-                            <Slider 
-                                disabled={isBrListDisabled}
-                                step={null}
-                                marks={isBrListDisabled?null:brList.map((element) => {return {value: parseFloat(element)}})}
-                                valueLabelDisplay='auto'
-                                value={brRange}
-                                onChange={(event, newValue) => {setBrRange(newValue)}}
-                                min={isBrListDisabled?0:parseFloat(brList[0])}
-                                max={isBrListDisabled?0:parseFloat(brList[brList.length - 1])}
-                            />
-                        </Box> 
+                                </Grid>
+                                <Grid size={'auto'}>
+                                    <Autocomplete
+                                        id='mode'
+                                        value={mode}
+                                        options={modes}
+                                        onChange={(event, newValue) => {
+                                            setMode(newValue);
+                                        }}
+                                        renderInput={(params) => <TextField {...params} label="Mode" />}
+                                        sx={{width: 300}}
+                                    />
 
-                        <Autocomplete
-                            loading={isVehicleListLoading}
-                            value={vehicle}
-                            disabled={isVehicleDisabled}
-                            id='vehicle'
-                            options={vehicleList}
-                            onChange={(event, newValue) => {
-                                setVehicle(newValue);
-                            }}
-                            renderInput={(params) => <TextField {...params} label="Vehicle" />}
-                            sx={{width: 300}}
-                        />
+                                </Grid>
+                                <Grid size={'auto'}>
+                                    <Box sx={{width: 300}}>
+                                        <Slider 
+                                            disabled={isBrListDisabled}
+                                            step={null}
+                                            marks={isBrListDisabled?null:brList.map((element) => {return {value: parseFloat(element)}})}
+                                            valueLabelDisplay='auto'
+                                            value={brRange}
+                                            onChange={(event, newValue) => {setBrRange(newValue)}}
+                                            min={isBrListDisabled?0:parseFloat(brList[0])}
+                                            max={isBrListDisabled?0:parseFloat(brList[brList.length - 1])}
+                                        />
+                                    </Box> 
 
-                        <Autocomplete
-                            id='outputX'
-                            value={outputX}
-                            disabled={isOutputLocked}
-                            options={outputXList.map((element) => element.replaceAll("_", " "))}
-                            onChange={(event, newValue) => {
-                                setOutputX(newValue);
-                            }}
-                            renderInput={(params) => <TextField {...params} label="Output field" />}
-                            sx={{width: 300}}
-                        />
+                                </Grid>
+                                <Grid size={'auto'}>
+                                    <Autocomplete
+                                        loading={isVehicleListLoading}
+                                        value={vehicle}
+                                        disabled={isVehicleDisabled}
+                                        id='vehicle'
+                                        options={vehicleList}
+                                        onChange={(event, newValue) => {
+                                            setVehicle(newValue);
+                                        }}
+                                        renderInput={(params) => <TextField {...params} label="Vehicle" />}
+                                        sx={{width: 300}}
+                                    />
 
-                        <Autocomplete
-                            id='outputY'
-                            value={outputY}
-                            disabled={isOutputLocked}
-                            options={outputYList.map((element) => element.replaceAll("_", " "))}
-                            onChange={(event, newValue) => {
-                                setOutputY(newValue);
-                            }}
-                            renderInput={(params) => <TextField {...params} label="Output field" />}
-                            sx={{width: 300}}
-                        />
+                                </Grid>
+                                <Grid size={'auto'}>
+                                    <Autocomplete
+                                        id='outputX'
+                                        value={outputX}
+                                        disabled={isOutputLocked}
+                                        options={outputXList.map((element) => element.replaceAll("_", " "))}
+                                        onChange={(event, newValue) => {
+                                            setOutputX(newValue);
+                                        }}
+                                        renderInput={(params) => <TextField {...params} label="Output field" />}
+                                        sx={{width: 300}}
+                                    />
 
-                    </Box>
+                                </Grid>
+                                <Grid size={'auto'}> 
+                                    <Autocomplete
+                                        id='outputY'
+                                        value={outputY}
+                                        disabled={isOutputLocked}
+                                        options={outputYList.map((element) => element.replaceAll("_", " "))}
+                                        onChange={(event, newValue) => {
+                                            setOutputY(newValue);
+                                        }}
+                                        renderInput={(params) => <TextField {...params} label="Output field" />}
+                                        sx={{width: 300}}
+                                    />
+
+                                
+
+                                </Grid>
+                                {/* <Grid size={'auto'}>
+                                    <FormGroup>
+                                        <FormControlLabel control={<Switch checked={toExcludeZeros} onChange={(event, newValue) => {setToExcludeZeros(newValue)}}/>} label="Exclude Zeros"/> 
+                                    </FormGroup>
+                                </Grid> */}
+
+                            </Grid>
+                        </Box>
+
 
                 </Grid>
-                <Grid size={6}>
-                    <Box sx={{ p: 2, textAlign: 'center'}}>
+                <Grid size={"grow"} flexGrow={1}>
+                    <Box sx={{ border: 2, borderColor: 'info.light', borderRadius: 5, p: 2, textAlign: 'center', height: '100%'}}>
+                        <Typography>Dataset List</Typography>
                         <DatasetList datasets={data.datasets} deleteItem={deleteItem}/>
                     </Box>
                 </Grid>
@@ -393,13 +419,6 @@ const VehicleGraph = () => {
 
 
             </Grid>
-                {/*
-                
-            <FormGroup>
-                <FormControlLabel control={<Switch checked={toExcludeZeros} onChange={(event, newValue) => {setToExcludeZeros(newValue)}}/>} label="Exclude Zeros"/> 
-            </FormGroup>
-
-            */}
             
         </Container>
     )
