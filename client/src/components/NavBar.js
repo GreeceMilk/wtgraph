@@ -72,10 +72,10 @@ const NavBar = () => {
                       </NavLink>
                     </Grid>
                     <Grid item sx={{ display: {xs: 'none', md: 'flex'}}}>
-                        <NavLink to='/test'>
+                        <NavLink to='/nation'>
                           <Button variant='text' color="secondary">Nation</Button>
                         </NavLink>
-                        <NavLink to='/test1'>
+                        <NavLink to='/vehicle'>
                           <Button variant='text' color="secondary">Vehicle</Button>
                         </NavLink>
                     </Grid>
