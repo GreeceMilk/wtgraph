@@ -1,4 +1,4 @@
-import { Button, TextField, Typography } from '@mui/material';
+import { Button, Divider, TextField, Typography } from '@mui/material';
 import { Box, Grid } from '@mui/system';
 import React from 'react'
 import { useState } from 'react';
@@ -31,27 +31,30 @@ const GraphLayout = ({Selector}) => {
 
   return (
     <Box mx={10}>
-        <Grid container spacing={2}>
-            <Grid item sx={{ border: 2, borderColor: 'info.light', borderRadius: 5, p: 2, textAlign: 'center', height: '100%'}}>
+        <Grid container spacing={5}>
+            <Grid item sx={{ border: 2, borderColor: 'secondary.dark', borderRadius: 5, p: 2, textAlign: 'center', height: '100%'}}>
                 <Selector data={data} setData={setData} outputX={outputX} setOutputX={setOutputX} 
                     setDataSetName={setDataSetName} setIsDataSetNameDisabled={setIsDataSetNameDisabled}/>
             </Grid>
-            <Grid item size={"grow"} sx={{ border: 2, borderColor: 'info.light', borderRadius: 5, p: 2, textAlign: 'center', height: '100%'}}>
-                <Typography>Dataset List</Typography>
-                <DatasetList datasets={data.datasets} deleteItem={deleteItem}/>
+            <Grid item size={"grow"} flexGrow={1}>
+                <Box sx={{ border: 2, borderColor: 'secondary.dark', borderRadius: 5, p: 2, textAlign: 'center', height: '100%'}}>
+                    <Typography variant='h6' color='secondary.dark'>Dataset List</Typography>
+                    <Divider variant='middle' sx={{bgcolor: 'primary.main', mt: 2, mb: 2}}/>
+                    <DatasetList datasets={data.datasets} deleteItem={deleteItem}/>
+                </Box>
             </Grid>
         </Grid>
-        <Grid container spacing={2} justifyContent={"center"} mt={10}>
+        <Grid container spacing={2} justifyContent={"center"} sx={{mt: 10}}>
             <Grid item>
                 <TextField required id="dataset name" label="Enter Dataset Name" variant="outlined" 
                     value={dataSetName} disabled={isDataSetNameDisabled} onChange={(event) => {setDataSetName(event.target.value)}}
                     sx={{width: 300}}/>
             </Grid>
             <Grid item alignContent={"center"}>
-                <Button variant="outlined" onClick={saveDataset}>Save Data</Button>
+                <Button variant="outlined" onClick={saveDataset} size='large'>Save Data</Button>
             </Grid>
         </Grid>
-        <Box mt={5}>
+        <Box sx={{mt: 10}}>
             <Graph data={data} outputX={outputX}></Graph>
         </Box>
     </Box>
