@@ -18,21 +18,27 @@ const theme = createTheme(
       dark: true,
       light: {
         palette: {
+          background: {
+            default: '#f5f5f5',
+          },
           primary: {
-            main: '#00838f',
+            main: '#333333',
           },
           secondary: {
-            main: '#ffc400',
+            main: '#228bda',
           },
         },
       },
       dark: {
         palette: {
+          background: {
+            default: '#121212',
+          },
           primary: {
-            main: '#00838f',
+            main: '#eeeeee',
           },
           secondary: {
-            main: '#ffc400',
+            main: '#00bcd4',
           },
         },
       },
