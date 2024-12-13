@@ -6,38 +6,22 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import { NavLink } from 'react-router-dom';
 
+import { currentColorMode } from '../Util';
+
 const NavBar = () => {
   const {mode, setMode} = useColorScheme();
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   function modeSwitch() {
-    if (mode === 'system') {
-      if (prefersDarkMode) {
-        setMode('light');
-      } else {
-        setMode('dark');
-      }
-    } else if (mode === 'light') {
+    if (currentColorMode(mode, prefersDarkMode) === 'light') {
       setMode('dark');
     } else {
       setMode('light');
     }
   }
   
-
-  // useEffect(() => {
-    // console.log("Mode", mode);
-    // console.log("System perfer dark mode", prefersDarkMode);
-  // }, [mode])
-
   function iconDisplay() {
-    if (mode === 'system') {
-      if (prefersDarkMode) {
-        return (<DarkModeIcon></DarkModeIcon>);
-      } else {
-        return (<LightModeIcon></LightModeIcon>);
-      }
-    } else if (mode === 'light') {
+    if (currentColorMode(mode, prefersDarkMode) === 'light') {
       return (<LightModeIcon></LightModeIcon>);
     } else {
       return (<DarkModeIcon></DarkModeIcon>);

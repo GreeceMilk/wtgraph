@@ -1,4 +1,4 @@
-import "chartjs-adapter-date-fns"
+import "chartjs-adapter-date-fns";
 
 
 const modes = ['ab', 'rb', 'sb'];
@@ -20,5 +20,18 @@ function convertSpaceToSnake(str) {
     return str.replaceAll(' ', '_');
 }
 
+function currentColorMode(mode, prefersDarkMode) {
+    if (mode === 'system') {
+        if (prefersDarkMode) {
+            return 'dark';
+        } else {
+            return 'light';
+        }
+    } else if (mode === 'light') {
+        return 'light';
+    } else {
+        return 'dark';
+    }
+}
 
-export { modes, brRanges, outputListNation, convertSnakeToSpace, convertSpaceToSnake};
+export { modes, brRanges, outputListNation, convertSnakeToSpace, convertSpaceToSnake, currentColorMode};
