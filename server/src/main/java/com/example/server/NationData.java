@@ -6,6 +6,6 @@ import lombok.Data;
 
 @Data
 public class NationData {
-    private Date date;
+    private Date xData;
     private Float yData;
 }
