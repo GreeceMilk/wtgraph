@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../api/axiosConfig.js';
-import {Chart, registerables} from 'chart.js';
 import "chartjs-adapter-date-fns";
-import autocolors from 'chartjs-plugin-autocolors';
 import {v4 as uuidv4} from 'uuid'
 
 import {modes, convertSpaceToSnake} from '../Util.js';
