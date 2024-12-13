@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import api from '../api/axiosConfig.js';
-import {Line} from 'react-chartjs-2';
 import {Chart, registerables} from 'chart.js';
 import "chartjs-adapter-date-fns";
 import autocolors from 'chartjs-plugin-autocolors';
@@ -9,8 +8,6 @@ import {modes, brRanges, outputListNation as outputList} from '../Util.js';
 
 import { Box, TextField, Autocomplete, Button } from '@mui/material';
 // import { set } from 'date-fns';
-
-import DatasetList from './DatasetList.js';
 
 // import { parseISO } from 'date-fns';
 
@@ -27,8 +24,7 @@ import DatasetList from './DatasetList.js';
 
 Chart.register(...registerables, autocolors);
 
-const NationGraph = () => {
-    const [data, setData] = useState({datasets:[]});
+const NationGraph = ({data, setData, outputX, setOutputX, setDataSetName, setIsDataSetNameDisabled}) => {
     const [mode, setMode] = useState(null);
     const [brRange, setBrRange] = useState(null);
 
@@ -47,8 +43,8 @@ const NationGraph = () => {
     const [output, setOutput] = useState(null);
     // TODO: locking output after data is saved
 
-    const [dataSetName, setDataSetName] = useState("");
-    const [isDataSetNameDisabled, setIsDataSetNameDisabled] = useState(true);
+    // const [dataSetName, setDataSetName] = useState("");
+    // const [isDataSetNameDisabled, setIsDataSetNameDisabled] = useState(true);
 
     function areAllObjectsValid(array) {
         return array.every((element) => element !== undefined && element !== null);
@@ -137,6 +133,12 @@ const NationGraph = () => {
         setData({datasets: data.datasets.filter((data) => data.id !== id)});
     }
 
+    useEffect(() => {
+      setOutputX("date");
+    
+    }, [])
+    
+
     useEffect(() => { 
         // console.log("Mode is"+mode); console.log("brRagne is" + brRange);
         setNation(null); setNationList([]); 
@@ -202,6 +204,10 @@ const NationGraph = () => {
             setIsDataSetNameDisabled(true);
             setDataSetName("");
         }
+        if (data.datasets.length > 0 && data.datasets[data.datasets.length - 1].saved) {
+            setMode(null);
+            setBrRange(null);
+        }
     }, [data])
 
     const options = {
@@ -260,7 +266,7 @@ const NationGraph = () => {
         // clip: 2,
     }
     return (
-        <div>
+        <Box>
             <Autocomplete
                 id='mode'
                 value={mode}
@@ -325,18 +331,7 @@ const NationGraph = () => {
                 renderInput={(params) => <TextField {...params} label="Output field" />}
                 sx={{width: 300}}
             />
-
-            <TextField required id="dataset name" label="Enter Dataset Name" variant="outlined" 
-                        value={dataSetName} disabled={isDataSetNameDisabled} onChange={(event) => {setDataSetName(event.target.value)}}
-                        sx={{width: 300}}/>
-
-            <Button variant="outlined" onClick={saveDataset}>Save Data</Button>
-
-            <div width="800" height="400">
-                {data?<Line data={data} options={options} />:null}
-            </div>
-            <DatasetList datasets={data.datasets} deleteItem={deleteItem}/>
-        </div>
+        </Box>
     )
 }
 

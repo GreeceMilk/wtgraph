@@ -1,7 +1,5 @@
 import React from 'react'
-import Box from '@mui/material/Box';
 import { AppBar, IconButton, Toolbar, Typography, useColorScheme, useMediaQuery, Grid2 as Grid, Button, Container } from '@mui/material';
-import { useEffect } from 'react';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import { NavLink } from 'react-router-dom';

@@ -55,7 +55,7 @@ function App() {
         <Routes>
           <Route path="/" element = {<Layout/>}>
             <Route path="/" element={<Home/>}> </Route>
-            <Route path="/nation" element={<NationGraph/>}></Route>
+            <Route path="/nation" element={<GraphLayout Selector={NationGraph}/>}></Route>
             <Route path="/vehicle" element={<GraphLayout Selector={VehicleGraph}/>}></Route>
           </Route>
         </Routes>

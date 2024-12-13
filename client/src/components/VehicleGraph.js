@@ -116,20 +116,6 @@ const VehicleGraph = ({data, setData, outputX, setOutputX, setDataSetName, setIs
         }
     }
 
-    function saveDataset() {
-        if (data && data.datasets.length > 0) {
-            console.log("Saving dataset: ", dataSetName);
-            // data.datasets[data.datasets.length - 1].label = dataSetName;
-            // data.datasets[data.datasets.length - 1].saved = true;
-            setData({datasets: [...data.datasets.slice(0, data.datasets.length - 1), 
-                {id: data.datasets[data.datasets.length - 1].id, label: dataSetName, data: data.datasets[data.datasets.length - 1].data, saved: true}]});
-        } else {
-            console.log("Data is not saved");
-        }
-        console.log("Data: ", data);
-        setVehicle(null);
-    }
-
     async function getOutputList() {
         const response = await api.get("/api/outputList");
         console.log("Output List: ", response.data);
