@@ -42,4 +42,7 @@ public interface VehicleRepo extends MongoRepository<Vehicle, ObjectId> {
 
     @Aggregation(pipeline = {"{$group: {'_id': '$?0'}}", "{$match: {'_id': {$ne: null}}}", "{$sort: {'_id': 1}}"})
     List<Double> findBrList(String brMode);
+
+    @Aggregation(pipeline = {"{$group: {'_id': '$name', label: {$first: '$wk_name'}}}", "{$sample: {size: 1}}", "{$project: {'name': '$_id', '_id': 0, 'label': 1}}"})
+    VehicleName randomVehicle();
 }

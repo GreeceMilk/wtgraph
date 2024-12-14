@@ -43,4 +43,15 @@ public class VehicleService {
         }
         return outputNames;
     }
+
+    List<VehicleData> getVehicleRandomOutput(String name) {
+        List<String> outputNames = getOutputNames();
+        String outputX = "date";
+        String outputY = outputNames.get((int)(Math.random() * outputNames.size()));
+        return getVehicleData(name, outputX, outputY);
+    }
+
+    VehicleName getRandomVehicle() {
+        return vehicleRepo.randomVehicle();
+    }
 }

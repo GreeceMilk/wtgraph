@@ -74,6 +74,17 @@ public class Controller {
 	public ResponseEntity<List<VehicleDataWithCount>> getVehicleDataWithCount(@RequestParam String name, @RequestParam String outputX, @RequestParam String outputY) {
 		return new ResponseEntity<>(vehicleService.getVehicleDataWithCount(name, outputX, outputY), HttpStatus.OK);
 	}
+
+	@GetMapping("/vehicleRandomOutput")
+	public ResponseEntity<List<VehicleData>> getVehicleRandomOutput(@RequestParam String name) {
+		return new ResponseEntity<>(vehicleService.getVehicleRandomOutput(name), HttpStatus.OK);
+	}
+
+	@GetMapping("/randomVehicle")
+	public ResponseEntity<VehicleName> getRandomVehicle() {
+		return new ResponseEntity<>(vehicleService.getRandomVehicle(), HttpStatus.OK);
+	}
+	
 	
 	@GetMapping("/outputList")
 	public ResponseEntity<List<String>> getOutputNames() {
