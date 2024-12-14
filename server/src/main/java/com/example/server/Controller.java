@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import org.springframework.data.util.Pair;
-
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -84,7 +82,11 @@ public class Controller {
 	public ResponseEntity<VehicleName> getRandomVehicle() {
 		return new ResponseEntity<>(vehicleService.getRandomVehicle(), HttpStatus.OK);
 	}
-	
+
+	@GetMapping("/randomVehicleData")
+	public ResponseEntity<VehicleDataWithInfo> getRandomVehicleData() {
+		return new ResponseEntity<>(vehicleService.getRandomVehicleData(), HttpStatus.OK);
+	}
 	
 	@GetMapping("/outputList")
 	public ResponseEntity<List<String>> getOutputNames() {
