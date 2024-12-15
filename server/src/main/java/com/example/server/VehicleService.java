@@ -57,16 +57,21 @@ public class VehicleService {
     }
     
     VehicleDataWithInfo getRandomVehicleData() {
-        VehicleName vehicleName = getRandomVehicle();
-        List<String> outputNames = getOutputNames();
-        String outputX = "date";
-        String outputY = outputNames.stream().filter(name -> !name.equals("date")).collect(Collectors.toList()).get((int)(Math.random() * outputNames.size()));
-        List<VehicleData> vehicleData = getVehicleData(vehicleName.getName(), outputX, outputY);
-        VehicleDataWithInfo vehicleDataWithInfo = new VehicleDataWithInfo();
-        vehicleDataWithInfo.setVehicleName(vehicleName);
-        vehicleDataWithInfo.setOutputX(outputX);
-        vehicleDataWithInfo.setOutputY(outputY);
-        vehicleDataWithInfo.setVehicleData(vehicleData);
-        return vehicleDataWithInfo;
+        while (true) {
+            VehicleName vehicleName = getRandomVehicle();
+            // List<String> outputNames = getOutputNames().stream().filter(name -> !name.equals("date")).collect(Collectors.toList());
+            List<String> outputNames = List.of("ab_win_rate", "rb_win_rate");
+            String outputX = "date";
+            String outputY = outputNames.get((int)(Math.random() * outputNames.size()));
+            List<VehicleData> vehicleData = getVehicleData(vehicleName.getName(), outputX, outputY);
+            if (!vehicleData.isEmpty()) {
+                VehicleDataWithInfo vehicleDataWithInfo = new VehicleDataWithInfo();
+                vehicleDataWithInfo.setVehicleName(vehicleName);
+                vehicleDataWithInfo.setOutputX(outputX);
+                vehicleDataWithInfo.setOutputY(outputY);
+                vehicleDataWithInfo.setVehicleData(vehicleData);
+                return vehicleDataWithInfo;
+            }
+        }
     }
 }
