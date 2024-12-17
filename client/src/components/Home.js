@@ -5,29 +5,8 @@ import { Box, Container, Paper, Typography } from '@mui/material';
 
 import { convertSnakeToSpace } from '../Util';
 
-const Home = () => {
-  const [data, setData] = React.useState({datasets: []});
-  const [wkName, setWkName] = React.useState("");
-  const [outputX, setOutputX] = React.useState("");
-  const [outputY, setOutputY] = React.useState("");
+const Home = ({data, wkName, outputX, outputY}) => {
   
-  const getRandomData = async () => {
-      try {
-        const response = await api.get('/api/randomVehicleData');
-        let temp = {data: response.data.vehicleData};
-        setWkName(response.data.vehicleName.label);
-        setData({datasets: [temp]});
-        setOutputX(response.data.outputX);
-        setOutputY(response.data.outputY);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-  useEffect(() => {
-      getRandomData();
-  }, []);
-
   return (
     <Box>
       <Container sx={{mb: 4}}>
