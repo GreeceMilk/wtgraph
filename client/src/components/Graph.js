@@ -115,6 +115,7 @@ const Graph = ({data, outputX}) => {
                     pointStyle: !isTimeAxis(xdata),
                 },
             },
+            animation: false
             // clip: 2,
         };
     }
