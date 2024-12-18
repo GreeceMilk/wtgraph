@@ -1,6 +1,7 @@
 import React from 'react';
 import {Outlet} from 'react-router-dom';    
 import NavBar from './NavBar';
+import { Box } from '@mui/material';
 
 const Layout = () => {
 
@@ -8,6 +9,7 @@ const Layout = () => {
     <main>
       <NavBar />
       <Outlet />
+      <Box sx={{height: '100px'}}></Box>
     </main>
   );
 }
