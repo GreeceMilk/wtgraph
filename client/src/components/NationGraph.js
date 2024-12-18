@@ -6,7 +6,7 @@ import autocolors from 'chartjs-plugin-autocolors';
 import {v4 as uuidv4} from 'uuid';
 import {modes, brRanges, outputListNation as outputList} from '../Util.js';
 
-import { Box, TextField, Autocomplete, Button } from '@mui/material';
+import { Box, TextField, Autocomplete, Grid2 as Grid } from '@mui/material';
 // import { set } from 'date-fns';
 
 // import { parseISO } from 'date-fns';
@@ -267,70 +267,83 @@ const NationGraph = ({data, setData, outputX, setOutputX, setDataSetName, setIsD
     }
     return (
         <Box>
-            <Autocomplete
-                id='mode'
-                value={mode}
-                options={modes}
-                onChange={(event, newValue) => {
-                    setMode(newValue);
-                }}
-                renderInput={(params) => <TextField {...params} label="Mode" />}
-                sx={{width: 300}}
-            />
-            <Autocomplete
-                id='brRange'
-                value={brRange}
-                options={brRanges}
-                onChange={(event, newValue) => {
-                    setBrRange(newValue);
-                }}
-                renderInput={(params) => <TextField {...params} label="BR Range" />}
-                sx={{width: 300}}
-            />
-            <Autocomplete
-                value={nation}
-                disabled={isNationDisabled}
-                id='nation'
-                options={nationList}
-                onChange={(event, newValue) => {
-                    setNation(newValue);
-                }}
-                renderInput={(params) => <TextField {...params} label="Nation" />}
-                sx={{width: 300}}
-            />
-            <Autocomplete
-                value={cls}
-                disabled={isClsDisabled}
-                id='cls'
-                options={clsList}
-                onChange={(event, newValue) => {
-                    setCls(newValue);
-                }}
-                renderInput={(params) => <TextField {...params} label="Cls" />}
-                sx={{width: 300}}
-            />
-
-            <Autocomplete
-                value={lowerBr}
-                disabled={isLowerBrDisabled}
-                id='cls'
-                options={lowerBrList}
-                onChange={(event, newValue) => {
-                    setLowerBr(newValue);
-                }}
-                renderInput={(params) => <TextField {...params} label="Lower Br" />}
-                sx={{width: 300}}
-            />
+            <Grid container spacing={2} direction={'column'}>
+                <Grid item>
+                    <Autocomplete
+                        id='mode'
+                        value={mode}
+                        options={modes}
+                        onChange={(event, newValue) => {
+                            setMode(newValue);
+                        }}
+                        renderInput={(params) => <TextField {...params} label="Mode" />}
+                        sx={{width: 300}}
+                    />
+                </Grid>
+                <Grid item>
+                    <Autocomplete
+                        id='brRange'
+                        value={brRange}
+                        options={brRanges}
+                        onChange={(event, newValue) => {
+                            setBrRange(newValue);
+                        }}
+                        renderInput={(params) => <TextField {...params} label="BR Range" />}
+                        sx={{width: 300}}
+                    />
+                </Grid>
+                <Grid item>
+                    <Autocomplete
+                        value={nation}
+                        disabled={isNationDisabled}
+                        id='nation'
+                        options={nationList}
+                        onChange={(event, newValue) => {
+                            setNation(newValue);
+                        }}
+                        renderInput={(params) => <TextField {...params} label="Nation" />}
+                        sx={{width: 300}}
+                    />
+                </Grid>
+                <Grid item>
+                    <Autocomplete
+                        value={cls}
+                        disabled={isClsDisabled}
+                        id='cls'
+                        options={clsList}
+                        onChange={(event, newValue) => {
+                            setCls(newValue);
+                        }}
+                        renderInput={(params) => <TextField {...params} label="Cls" />}
+                        sx={{width: 300}}
+                    />
+                </Grid>
+                <Grid item>
+                    <Autocomplete
+                        value={lowerBr}
+                        disabled={isLowerBrDisabled}
+                        id='cls'
+                        options={lowerBrList}
+                        onChange={(event, newValue) => {
+                            setLowerBr(newValue);
+                        }}
+                        renderInput={(params) => <TextField {...params} label="Lower Br" />}
+                        sx={{width: 300}}
+                    />
+                </Grid>
+                <Grid item>
+                    <Autocomplete
+                        id='output'
+                        options={outputList.map((element) => element.replaceAll("_", " "))}
+                        onChange={(event, newValue) => {
+                            setOutput(newValue);
+                        }}
+                        renderInput={(params) => <TextField {...params} label="Output field" />}
+                        sx={{width: 300}}
+                    />
+                </Grid>
+            </Grid>
             
-            <Autocomplete
-                id='output'
-                options={outputList.map((element) => element.replaceAll("_", " "))}
-                onChange={(event, newValue) => {
-                    setOutput(newValue);
-                }}
-                renderInput={(params) => <TextField {...params} label="Output field" />}
-                sx={{width: 300}}
-            />
         </Box>
     )
 }
