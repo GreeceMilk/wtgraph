@@ -10,7 +10,7 @@ const DisplayPanel = styled(Paper)(({ theme }) => ({
     borderColor: theme.palette.primary.dark,
     borderRadius: 5 * theme.shape.borderRadius,
     padding: theme.spacing(2),
-    textAlign: 'center',
+    // textAlign: 'center',
     height: '100%',
 }));
 
@@ -57,8 +57,7 @@ const GraphLayout = ({Selector}) => {
                 <Grid item size={"grow"} flexGrow={1}>
                     <Box sx={{height: '100%'}}>
                         <DisplayPanel variant="outlined">
-                            <Typography variant='h6' color='secondary.dark'>Dataset List</Typography>
-                            <Divider variant='middle' sx={{bgcolor: 'primary.main', mt: 2, mb: 2}}/>
+                            <Typography variant='h5' color='secondary.dark' sx={{pl: '16px'}}>Dataset List</Typography>
                             <DatasetList datasets={data.datasets} deleteItem={deleteItem}/>
                         </DisplayPanel>
                     </Box>
