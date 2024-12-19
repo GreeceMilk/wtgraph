@@ -44,6 +44,15 @@ const GraphLayout = ({Selector}) => {
         console.log("OutputX: ", outputX);
     }, [Selector])
 
+    function switchVisibility(id) {
+        setData({datasets: data.datasets.map((data) => {
+            if (data.id === id) {
+                return {...data, hidden: !data.hidden};
+            }
+            return data;
+        })});
+    }
+
   return (
     <>
         <Box mx={10}>
@@ -57,8 +66,8 @@ const GraphLayout = ({Selector}) => {
                 <Grid item size={"grow"} flexGrow={1}>
                     <Box sx={{height: '100%'}}>
                         <DisplayPanel variant="outlined">
-                            <Typography variant='h5' color='secondary.dark' sx={{pl: '16px'}}>Dataset List</Typography>
-                            <DatasetList datasets={data.datasets} deleteItem={deleteItem}/>
+                            <Typography variant='h5' color='secondary.dark' sx={{pl: '16px', textAlign: "left"}}>Dataset List</Typography>
+                            <DatasetList datasets={data.datasets} switchVisibility={switchVisibility} deleteItem={deleteItem}/>
                         </DisplayPanel>
                     </Box>
                 </Grid>

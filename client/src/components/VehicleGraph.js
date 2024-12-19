@@ -55,6 +55,7 @@ const VehicleGraph = ({data, setData, outputX, setOutputX, setDataSetName, setIs
                     label: "new dataset",
                     data: response.data,
                     saved: false,
+                    hidden: false,
                 };
                 if (data.datasets.length === 0 || data.datasets[data.datasets.length - 1].saved) {
                     setData({datasets: [...data.datasets, temp]});
