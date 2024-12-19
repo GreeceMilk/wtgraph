@@ -1,15 +1,25 @@
-import { Button, Divider, TextField, Typography } from '@mui/material';
-import { Box, Grid } from '@mui/system';
-import React from 'react'
+import { Button, Card, Divider, TextField, Typography, Paper, Snackbar } from '@mui/material';
+import { Box, Grid, styled } from '@mui/system';
+import React, { useEffect } from 'react'
 import { useState } from 'react';
 import Graph from './Graph';
 import DatasetList from './DatasetList';
+
+const DisplayPanel = styled(Paper)(({ theme }) => ({
+    ...theme.typography.body2,
+    borderColor: theme.palette.primary.dark,
+    borderRadius: 5 * theme.shape.borderRadius,
+    padding: theme.spacing(2),
+    textAlign: 'center',
+    height: '100%',
+}));
 
 const GraphLayout = ({Selector}) => {
     const [data, setData] = useState({datasets:[]});
     const [outputX, setOutputX] = useState(null);
     const [dataSetName, setDataSetName] = useState("");
     const [isDataSetNameDisabled, setIsDataSetNameDisabled] = useState(true);
+    const [dataSavedBarOpen, setDataSavedBarOpen] = useState(false);
 
     function saveDataset() {
         if (data && data.datasets.length > 0) {
@@ -22,42 +32,61 @@ const GraphLayout = ({Selector}) => {
             console.log("Data is not saved");
         }
         console.log("Data: ", data);
+        setDataSavedBarOpen(true);
         // setVehicle(null);
     }
 
     function deleteItem(id) {
         setData({datasets: data.datasets.filter((data) => data.id !== id)});
     }
+    
+    useEffect(() => {
+        console.log("OutputX: ", outputX);
+    }, [Selector])
 
   return (
-    <Box mx={10}>
-        <Grid container spacing={5}>
-            <Grid item sx={{ border: 2, borderColor: 'secondary.dark', borderRadius: 5, p: 2, textAlign: 'center', height: '100%'}}>
-                <Selector data={data} setData={setData} outputX={outputX} setOutputX={setOutputX} 
-                    setDataSetName={setDataSetName} setIsDataSetNameDisabled={setIsDataSetNameDisabled}/>
+    <>
+        <Box mx={10}>
+            <Grid container spacing={5}>
+                <Grid item>
+                    <DisplayPanel variant='outlined'>
+                        <Selector data={data} setData={setData} outputX={outputX} setOutputX={setOutputX} 
+                        setDataSetName={setDataSetName} setIsDataSetNameDisabled={setIsDataSetNameDisabled}/>
+                    </DisplayPanel>
+                </Grid>
+                <Grid item size={"grow"} flexGrow={1}>
+                    <Box sx={{height: '100%'}}>
+                        <DisplayPanel variant="outlined">
+                            <Typography variant='h6' color='secondary.dark'>Dataset List</Typography>
+                            <Divider variant='middle' sx={{bgcolor: 'primary.main', mt: 2, mb: 2}}/>
+                            <DatasetList datasets={data.datasets} deleteItem={deleteItem}/>
+                        </DisplayPanel>
+                    </Box>
+                </Grid>
             </Grid>
-            <Grid item size={"grow"} flexGrow={1}>
-                <Box sx={{ border: 2, borderColor: 'secondary.dark', borderRadius: 5, p: 2, textAlign: 'center', height: '100%'}}>
-                    <Typography variant='h6' color='secondary.dark'>Dataset List</Typography>
-                    <Divider variant='middle' sx={{bgcolor: 'primary.main', mt: 2, mb: 2}}/>
-                    <DatasetList datasets={data.datasets} deleteItem={deleteItem}/>
-                </Box>
+            <Grid container spacing={2} justifyContent={"center"} sx={{m: 6}}>
+                <Grid item>
+                    <TextField required id="dataset name" label="Enter Dataset Name" variant="outlined" 
+                        value={dataSetName} disabled={isDataSetNameDisabled} onChange={(event) => {setDataSetName(event.target.value)}}
+                        sx={{width: 300}}/>
+                </Grid>
+                <Grid item alignContent={"center"}>
+                    <Button variant="outlined" onClick={saveDataset} size='large'>Save Data</Button>
+                </Grid>
             </Grid>
-        </Grid>
-        <Grid container spacing={2} justifyContent={"center"} sx={{mt: 10}}>
-            <Grid item>
-                <TextField required id="dataset name" label="Enter Dataset Name" variant="outlined" 
-                    value={dataSetName} disabled={isDataSetNameDisabled} onChange={(event) => {setDataSetName(event.target.value)}}
-                    sx={{width: 300}}/>
-            </Grid>
-            <Grid item alignContent={"center"}>
-                <Button variant="outlined" onClick={saveDataset} size='large'>Save Data</Button>
-            </Grid>
-        </Grid>
-        <Box sx={{mt: 10}}>
-            <Graph data={data} outputX={outputX}></Graph>
+            <Box>
+                <Paper elevation={2} sx={{ p: 4, borderRadius: 4}}>
+                    <Graph data={data} outputX={outputX}></Graph>
+                </Paper>
+            </Box>
         </Box>
-    </Box>
+        <Snackbar
+            open={dataSavedBarOpen}
+            autoHideDuration={5000}
+            onClose={() => setDataSavedBarOpen(false)}
+            message="Data Saved Successfully"
+        />
+    </>
     )
 }
 
