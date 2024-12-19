@@ -5,7 +5,7 @@ import {v4 as uuidv4} from 'uuid'
 
 import {modes, convertSpaceToSnake} from '../Util.js';
 
-import { Box, TextField, Autocomplete, Slider, Grid2 as Grid } from '@mui/material';
+import { Box, TextField, Autocomplete, Slider, Grid2 as Grid, FormControl, InputLabel, OutlinedInput, Divider } from '@mui/material';
 
 const VehicleGraph = ({data, setData, outputX, setOutputX, setDataSetName, setIsDataSetNameDisabled}) => {
     // const [data, setData] = useState({datasets:[]});
@@ -271,7 +271,24 @@ const VehicleGraph = ({data, setData, outputX, setOutputX, setDataSetName, setIs
             </Grid>
             <Grid size={'auto'}>
                 <Box sx={{width: 300}}>
-                    <Slider 
+                    <Divider textAlign='left' sx={{
+                        // fontSize: '1rem',
+                        "::before": {
+                            width: '4%'
+                        }, 
+                        "::after": {
+                            width: '96%'
+                        },
+                        "& .MuiDivider-wrapper": {
+                            paddingLeft: '5px',
+                            paddingRight: '5px', 
+                            fontSize: '0.75rem',
+                            fontWeight: 400, 
+                            lineHeight: '1.4375em',
+                            color: 'rgba(0, 0, 0, 0.6)'
+                        }
+                    }}>BR</Divider>
+                    <Slider
                         disabled={isBrListDisabled}
                         step={null}
                         marks={isBrListDisabled?null:brList.map((element) => {return {value: parseFloat(element)}})}
@@ -281,6 +298,7 @@ const VehicleGraph = ({data, setData, outputX, setOutputX, setDataSetName, setIs
                         min={isBrListDisabled?0:parseFloat(brList[0])}
                         max={isBrListDisabled?0:parseFloat(brList[brList.length - 1])}
                         color='secondary.dark'
+                        sx={{width: 280}}
                     />
                 </Box> 
 
@@ -309,7 +327,7 @@ const VehicleGraph = ({data, setData, outputX, setOutputX, setDataSetName, setIs
                     onChange={(event, newValue) => {
                         setOutputX(newValue);
                     }}
-                    renderInput={(params) => <TextField {...params} label="Output field" />}
+                    renderInput={(params) => <TextField {...params} label="X Axis" />}
                     sx={{width: 300}}
                 />
 
@@ -323,7 +341,7 @@ const VehicleGraph = ({data, setData, outputX, setOutputX, setDataSetName, setIs
                     onChange={(event, newValue) => {
                         setOutputY(newValue);
                     }}
-                    renderInput={(params) => <TextField {...params} label="Output field" />}
+                    renderInput={(params) => <TextField {...params} label="Y Axis" />}
                     sx={{width: 300}}
                 />
 
