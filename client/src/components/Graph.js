@@ -3,19 +3,21 @@ import { Line, Bubble, Scatter } from "react-chartjs-2";
 import {Chart, registerables} from "chart.js";
 import { isValid, parseISO } from "date-fns";
 import autocolors from "chartjs-plugin-autocolors";
+import zoomPlugin, { zoom } from "chartjs-plugin-zoom";
 // import { useColorScheme, useMediaQuery } from '@mui/material';
 
-import { currentColorMode } from '../Util';
 import { useTheme } from '@mui/material/styles';
 import { Switch, Grid2 as Grid, Box, FormGroup, FormControlLabel } from '@mui/material';
 
-Chart.register(...registerables, autocolors);
+Chart.register(...registerables, autocolors, zoomPlugin);
 
 const Graph = ({data, outputX}) => {
 
     const theme = useTheme();
     const [XGridChecked, setXGridChecked] = React.useState(false);
     const [YGridChecked, setYGridChecked] = React.useState(false);
+    const [enableZoom, setEnableZoom] = React.useState(false);
+    const [enablePan, setEnablePan] = React.useState(false);
 
     function getGridLineColor() {
         return [theme.palette.primary.main, "20"].join("");
@@ -80,6 +82,22 @@ const Graph = ({data, outputX}) => {
                     display: false,
                     text: "test",
                 },
+                zoom: {
+                    pan: {
+                        enabled: enablePan,
+                        mode: "x",
+                    }, 
+                    zoom: {
+                        wheel: {
+                            enabled: enableZoom,
+                        },
+                        pinch: {
+                            enabled: enableZoom,
+                        },
+                        mode: "x",
+                    },
+                    
+                }
             },
             scales: {
                 x: {
@@ -115,7 +133,11 @@ const Graph = ({data, outputX}) => {
                     pointStyle: !isTimeAxis(xdata),
                 },
             },
-            animation: false
+            animation: false,
+            interaction: {
+                mode: "index",
+                intersect: false
+            }, 
             // clip: 2,
         };
     }
@@ -137,6 +159,7 @@ const Graph = ({data, outputX}) => {
             <FormGroup row={true} sx={{justifyContent: 'center', mt: 2}}>
                 <FormControlLabel control={<Switch color='secondary' checked={XGridChecked} onChange={(event, value) => setXGridChecked(value)}/>} label="X Grid"  labelPlacement='bottom'/>
                 <FormControlLabel control={<Switch color='secondary' checked={YGridChecked} onChange={(event, value) => setYGridChecked(value)}/>} label="Y Grid"  labelPlacement='bottom'/>
+                <FormControlLabel control={<Switch color='secondary' checked={enablePan} onChange={(event, value) => {setEnablePan(value); setEnableZoom(value);}}/>} label="Enable Pan/Zoom"  labelPlacement='bottom'/>
             </FormGroup>
         </Box>
     </div>
