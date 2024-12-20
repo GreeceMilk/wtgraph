@@ -59,6 +59,7 @@ const GraphLayout = ({Selector}) => {
             <Grid container spacing={5}>
                 <Grid item>
                     <DisplayPanel variant='outlined'>
+                        <Typography variant='h5' color='secondary.dark' sx={{pl: 1, textAlign: "left", mb: 2}}>Filter</Typography>
                         <Selector data={data} setData={setData} outputX={outputX} setOutputX={setOutputX} 
                         setDataSetName={setDataSetName} setIsDataSetNameDisabled={setIsDataSetNameDisabled}/>
                     </DisplayPanel>
@@ -66,7 +67,7 @@ const GraphLayout = ({Selector}) => {
                 <Grid item size={"grow"} flexGrow={1}>
                     <Box sx={{height: '100%'}}>
                         <DisplayPanel variant="outlined">
-                            <Typography variant='h5' color='secondary.dark' sx={{pl: '16px', textAlign: "left"}}>Dataset List</Typography>
+                            <Typography variant='h5' color='secondary.dark' sx={{pl: 2, textAlign: "left"}}>Dataset List</Typography>
                             <DatasetList datasets={data.datasets} switchVisibility={switchVisibility} deleteItem={deleteItem}/>
                         </DisplayPanel>
                     </Box>
