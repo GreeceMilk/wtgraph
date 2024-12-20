@@ -27,8 +27,11 @@ const DatasetList = ({datasets, switchVisibility, deleteItem}) => {
 }
 
   return (
-    <div>
-      <List>
+    <Box sx={{height: "100%"}}>
+      <List sx={{
+        maxHeight: "500px",
+        overflow: "auto"
+      }}>
         {datasets.filter((data) => data.saved).map((data) => (
             <ListItem key={data.id} divider sx={{":hover": {backgroundColor: getItemBackgroundColor()}, "transition": "background-color 0.2s"}}
               secondaryAction={
@@ -43,7 +46,7 @@ const DatasetList = ({datasets, switchVisibility, deleteItem}) => {
             </ListItem>
         ))}
       </List>
-    </div>
+    </Box>
   )
 }
 
