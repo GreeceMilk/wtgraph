@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.server.scrape.Scraper;
+import com.example.server.scrape.WikiData;
+
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -23,6 +26,9 @@ public class Controller {
 
 	@Autowired
 	private VehicleService vehicleService;
+
+	@Autowired
+	private Scraper scraper;
 
 	@GetMapping("/nation")
 	public ResponseEntity<Optional<Nation>> getNation(@RequestParam String mode, @RequestParam String brRange, @RequestParam ObjectId id) {
@@ -92,4 +98,10 @@ public class Controller {
 	public ResponseEntity<List<String>> getOutputNames() {
 		return new ResponseEntity<List<String>>(vehicleService.getOutputNames(), HttpStatus.OK);
 	}
+
+	@GetMapping("/wikiData")
+	public ResponseEntity<WikiData> getWikiData(@RequestParam String name) {
+		return new ResponseEntity<>(scraper.scrapeWTWiki(name), HttpStatus.OK);
+	}
+	
 }
