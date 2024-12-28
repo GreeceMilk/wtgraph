@@ -12,6 +12,8 @@ import NationGraph from './components/NationGraph';
 import VehicleGraph from './components/VehicleGraph';
 import GraphLayout from './components/GraphLayout';
 
+const headingFont = "Monda, sans-serif";
+const bodyFont = "Inter, sans-serif";
 
 const theme = createTheme(
   {
@@ -44,6 +46,53 @@ const theme = createTheme(
           },
         },
       },
+    }, 
+    typography: {
+      fontFamily: [
+        'Inter',
+        'Monda',
+        'Roboto',
+        'Noto Sans'
+      ].join(','),
+      h1: {
+        fontFamily: headingFont,
+      },
+      h2: {
+        fontFamily: headingFont,
+      },
+      h3: {
+        fontFamily: headingFont,
+      },
+      h4: {
+        fontFamily: headingFont,
+      },
+      h5: {
+        fontFamily: headingFont,
+      },
+      h6: {
+        fontFamily: headingFont,
+      },
+      body1: {
+        fontFamily: bodyFont,
+      },
+      body2: {
+        fontFamily: bodyFont,
+      },
+      subtitle1: {
+        fontFamily: bodyFont,
+      },
+      subtitle2: {
+        fontFamily: bodyFont,
+      },
+      button: {
+        fontFamily: bodyFont,
+      },
+      caption: {
+        fontFamily: bodyFont,
+      },
+      overline: {
+        fontFamily: bodyFont,
+      }
     }
   }
 )
