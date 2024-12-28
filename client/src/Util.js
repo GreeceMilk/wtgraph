@@ -34,4 +34,8 @@ function currentColorMode(mode, prefersDarkMode) {
     }
 }
 
-export { modes, brRanges, outputListNation, convertSnakeToSpace, convertSpaceToSnake, currentColorMode};
+function areAllObjectsValid(array) {
+    return array.every((element) => element !== undefined && element !== null);
+}
+
+export { modes, brRanges, outputListNation, convertSnakeToSpace, convertSpaceToSnake, currentColorMode, areAllObjectsValid};

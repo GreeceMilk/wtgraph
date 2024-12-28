@@ -3,11 +3,11 @@ import api from '../api/axiosConfig.js';
 import "chartjs-adapter-date-fns";
 import {v4 as uuidv4} from 'uuid'
 
-import {modes, convertSpaceToSnake} from '../Util.js';
+import {modes, convertSpaceToSnake, areAllObjectsValid} from '../Util.js';
 
 import { Box, TextField, Autocomplete, Slider, Grid2 as Grid, FormControl, InputLabel, OutlinedInput, Divider } from '@mui/material';
 
-const VehicleGraph = ({data, setData, outputX, setOutputX, setDataSetName, setIsDataSetNameDisabled}) => {
+const VehicleGraph = ({data, setData, outputX, setOutputX, setDataSetName}) => {
     // const [data, setData] = useState({datasets:[]});
     const [mode, setMode] = useState("rb");
 
@@ -35,15 +35,8 @@ const VehicleGraph = ({data, setData, outputX, setOutputX, setDataSetName, setIs
 
     const [isOutputLocked, setIsOutputLocked] = useState(false);
 
-    // const [dataSetName, setDataSetName] = useState("");
-    // const [isDataSetNameDisabled, setIsDataSetNameDisabled] = useState(true);
-
     const timeoutRef = React.useRef(null);
     const timeout = 500;
-
-    function areAllObjectsValid(array) {
-        return array.every((element) => element !== undefined && element !== null);
-    }
 
     async function getData() {
         if (areAllObjectsValid([vehicle, outputX, outputY])) {
@@ -127,10 +120,6 @@ const VehicleGraph = ({data, setData, outputX, setOutputX, setDataSetName, setIs
         if (data.datasets.length > 0 && !data.datasets[data.datasets.length - 1].saved) {
             setData({datasets: data.datasets.slice(0, data.datasets.length - 1)});
         }
-    }
-
-    function deleteItem(id) {
-        setData({datasets: data.datasets.filter((data) => data.id !== id)});
     }
 
     function setDefaultBrRange() {

@@ -4,7 +4,7 @@ import {Chart, registerables} from 'chart.js';
 import "chartjs-adapter-date-fns";
 import autocolors from 'chartjs-plugin-autocolors';
 import {v4 as uuidv4} from 'uuid';
-import {modes, brRanges, outputListNation as outputList} from '../Util.js';
+import {modes, brRanges, outputListNation as outputList, areAllObjectsValid} from '../Util.js';
 
 import { Box, TextField, Autocomplete, Grid2 as Grid } from '@mui/material';
 // import { set } from 'date-fns';
@@ -41,14 +41,10 @@ const NationGraph = ({data, setData, outputX, setOutputX, setDataSetName, setIsD
     const [lowerBrList, setLowerBrList] = useState([]);
 
     const [output, setOutput] = useState(null);
-    // TODO: locking output after data is saved
 
-    // const [dataSetName, setDataSetName] = useState("");
-    // const [isDataSetNameDisabled, setIsDataSetNameDisabled] = useState(true);
-
-    function areAllObjectsValid(array) {
-        return array.every((element) => element !== undefined && element !== null);
-    }
+    // function areAllObjectsValid(array) {
+    //     return array.every((element) => element !== undefined && element !== null);
+    // }
 
     async function getData() {
         if (areAllObjectsValid([mode, brRange, nation, cls, lowerBr, output])) {
