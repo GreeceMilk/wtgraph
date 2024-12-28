@@ -36,7 +36,8 @@ public class Scraper {
                 getMaxForwardSpeed(doc),
                 getMaxReverseSpeed(doc),
                 getWeight(doc),
-                getEnginePower(doc)
+                getEnginePower(doc), 
+                url
             );
         } catch (IOException e) {
             e.printStackTrace();

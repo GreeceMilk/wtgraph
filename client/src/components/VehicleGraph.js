@@ -7,7 +7,7 @@ import {modes, convertSpaceToSnake, areAllObjectsValid} from '../Util.js';
 
 import { Box, TextField, Autocomplete, Slider, Grid2 as Grid, FormControl, InputLabel, OutlinedInput, Divider } from '@mui/material';
 
-const VehicleGraph = ({data, setData, outputX, setOutputX, setDataSetName}) => {
+const VehicleGraph = ({data, setData, outputX, setOutputX, setDataSetName, setIsDataSetNameDisabled}) => {
     // const [data, setData] = useState({datasets:[]});
     const [mode, setMode] = useState("rb");
 

@@ -29,4 +29,5 @@ public class WikiData {
     private double maxReverseSpeed;
     private double weight;
     private double enginePower;
+    private String source;
 }
