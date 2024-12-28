@@ -69,7 +69,7 @@ public class Scraper {
             Map<String, Double> brs = new HashMap<>();
             for (Element rank : ranks) {
                 String mode = rank.getElementsByClass("mode").first().text();
-                double br = Double.parseDouble(rank.getElementsByClass("value").first().text());
+                double br = customParseDouble(rank.getElementsByClass("value").first().text());
                 switch (mode) {
                     case "AB":
                         brs.put(mode, br);
@@ -101,14 +101,22 @@ public class Scraper {
                     parent().getElementsByClass("text-truncate").text();
     }
 
-    private int getResearchCost(Document doc) {
-        return Integer.parseInt(doc.getElementsMatchingOwnText("^Research$").first().
+    private Integer getResearchCost(Document doc) {
+        Elements researchWrapper = doc.getElementsMatchingOwnText("^Research$");
+        if (researchWrapper.isEmpty()) {
+            return 0;
+        }
+        return customParseInt(researchWrapper.first().
                     parent().getElementsByClass("game-unit_card-info_value").
                     first().child(0).text().replaceAll(",", ""));
     }
 
-    private int getPurchaseCost(Document doc) {
-        return Integer.parseInt(doc.getElementsMatchingOwnText("^Purchase$").first().
+    private Integer getPurchaseCost(Document doc) {
+        Elements purchaseWrapper = doc.getElementsMatchingOwnText("^Purchase$");
+        if (purchaseWrapper.isEmpty()) {
+            return 0;
+        }
+        return customParseInt(purchaseWrapper.first().
                     parent().getElementsByClass("game-unit_card-info_value").
                     first().child(0).text().replace(",", ""));
     }
@@ -133,27 +141,35 @@ public class Scraper {
     }
 
     private double getPowerToWeight(Document doc) {
-        return Double.parseDouble(doc.getElementsMatchingOwnText("^Power-to-weight ratio$").first().
+        return customParseDouble(doc.getElementsMatchingOwnText("^Power-to-weight ratio$").first().
                     parent().getElementsByClass("show-char-rb-mod-ref").first().text());
     }
 
     private double getMaxForwardSpeed(Document doc) {
-        return Double.parseDouble(doc.getElementsMatchingOwnText("^Forward$").first().
+        return customParseDouble(doc.getElementsMatchingOwnText("^Forward$").first().
                     parent().getElementsByClass("show-char-rb").first().text());
     }
 
     private double getMaxReverseSpeed(Document doc) {
-        return Double.parseDouble(doc.getElementsMatchingOwnText("^Backward$").first().
+        return customParseDouble(doc.getElementsMatchingOwnText("^Backward$").first().
                     parent().getElementsByClass("show-char-rb").first().text());
     }
 
     private double getWeight(Document doc) {
-        return Double.parseDouble(doc.getElementsMatchingOwnText("^Weight$").first().
+        return customParseDouble(doc.getElementsMatchingOwnText("^Weight$").first().
                     parent().getElementsByClass("game-unit_chars-value").first().text().replaceAll("t", ""));
     }
 
     private double getEnginePower(Document doc) {
-        return Double.parseDouble(doc.getElementsMatchingOwnText("^Engine power$").first().
+        return customParseDouble(doc.getElementsMatchingOwnText("^Engine power$").first().
                     parent().getElementsByClass("show-char-rb-mod-ref").first().text());
+    }
+    
+    private double customParseDouble(String str) {
+        return Double.parseDouble(str.replaceAll("[^0-9.]", ""));
+    }
+
+    private int customParseInt(String str) {
+        return Integer.parseInt(str.replaceAll("[^0-9]", ""));
     }
 }

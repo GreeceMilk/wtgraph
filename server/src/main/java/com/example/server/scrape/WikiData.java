@@ -17,8 +17,8 @@ public class WikiData {
     private double rbBr;
     private double sbBr;   
     private String role;
-    private int researchCost;
-    private int purchaseCost;
+    private Integer researchCost;
+    private Integer purchaseCost;
 
     private String generalInfo;
     private String vehicleByUpdate;
