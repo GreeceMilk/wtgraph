@@ -45,4 +45,7 @@ public interface VehicleRepo extends MongoRepository<Vehicle, ObjectId> {
 
     @Aggregation(pipeline = {"{$group: {'_id': '$name', label: {$first: '$wk_name'}}}", "{$sample: {size: 1}}", "{$project: {'name': '$_id', '_id': 0, 'label': 1}}"})
     VehicleName randomVehicle();
+
+    @Aggregation(pipeline = {"{$match: {'name': ?0}}", "{$sort: {'date': -1}}", "{$limit: 1}"})
+    Vehicle mostRecentData(String name);
 }

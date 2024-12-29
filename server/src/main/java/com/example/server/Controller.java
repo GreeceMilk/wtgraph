@@ -103,5 +103,11 @@ public class Controller {
 	public ResponseEntity<WikiData> getWikiData(@RequestParam String name) {
 		return new ResponseEntity<>(scraper.scrapeWTWiki(name), HttpStatus.OK);
 	}
+
+	@GetMapping("/mostRecentData")
+	public ResponseEntity<Vehicle> getMostRecentData(@RequestParam String name) {
+		return new ResponseEntity<>(vehicleService.mostRecentData(name), HttpStatus.OK);
+	}
+	
 	
 }

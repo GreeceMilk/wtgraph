@@ -74,4 +74,8 @@ public class VehicleService {
             }
         }
     }
+
+    Vehicle mostRecentData(String name) {
+        return vehicleRepo.mostRecentData(name);
+    }
 }
