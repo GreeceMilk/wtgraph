@@ -4,6 +4,7 @@ import React, { useEffect } from 'react'
 import { useState } from 'react';
 import Graph from './Graph';
 import DatasetList from './DatasetList';
+import WikiInfoCard from './WikiInfoCard';
 
 const DisplayPanel = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -20,6 +21,7 @@ const GraphLayout = ({Selector}) => {
     const [dataSetName, setDataSetName] = useState("");
     const [isDataSetNameDisabled, setIsDataSetNameDisabled] = useState(true);
     const [dataSavedBarOpen, setDataSavedBarOpen] = useState(false);
+    const [selectedVehicleName, setSelectedVehicleName] = useState(null);
 
     function saveDataset() {
         if (data && data.datasets.length > 0) {
@@ -27,7 +29,7 @@ const GraphLayout = ({Selector}) => {
             // data.datasets[data.datasets.length - 1].label = dataSetName;
             // data.datasets[data.datasets.length - 1].saved = true;
             setData({datasets: [...data.datasets.slice(0, data.datasets.length - 1), 
-                {id: data.datasets[data.datasets.length - 1].id, label: dataSetName, data: data.datasets[data.datasets.length - 1].data, saved: true}]});
+                {id: data.datasets[data.datasets.length - 1].id, label: dataSetName, data: data.datasets[data.datasets.length - 1].data, saved: true, hidden: false, vehicleName: data.datasets[data.datasets.length - 1].vehicleName}]});
         } else {
             console.log("Data is not saved");
         }
@@ -44,6 +46,14 @@ const GraphLayout = ({Selector}) => {
         console.log("OutputX: ", outputX);
     }, [Selector])
 
+    useEffect(() => {
+    
+      return () => {
+        setSelectedVehicleName(null);
+      }
+    }, [])
+    
+
     function switchVisibility(id) {
         setData({datasets: data.datasets.map((data) => {
             if (data.id === id) {
@@ -51,6 +61,10 @@ const GraphLayout = ({Selector}) => {
             }
             return data;
         })});
+    }
+
+    function getVehicleName() {
+        return selectedVehicleName;
     }
 
   return (
@@ -68,7 +82,7 @@ const GraphLayout = ({Selector}) => {
                     <Box sx={{height: '100%'}}>
                         <DisplayPanel variant="outlined">
                             <Typography variant='h5' color='secondary.dark' sx={{pl: 2, textAlign: "left"}}>Dataset List</Typography>
-                            <DatasetList datasets={data.datasets} switchVisibility={switchVisibility} deleteItem={deleteItem}/>
+                            <DatasetList datasets={data.datasets} switchVisibility={switchVisibility} deleteItem={deleteItem} setSelectedVehicleName={setSelectedVehicleName}/>
                         </DisplayPanel>
                     </Box>
                 </Grid>
@@ -88,6 +102,14 @@ const GraphLayout = ({Selector}) => {
                     <Graph data={data} outputX={outputX}></Graph>
                 </Paper>
             </Box>
+            <Grid container spacing={5} sx={{mt: 4}}>
+                <Grid item size={6}>
+                    <WikiInfoCard vehicleName={getVehicleName()}/>
+                </Grid>
+                <Grid item size={6}>
+
+                </Grid>
+            </Grid>
         </Box>
         <Snackbar
             open={dataSavedBarOpen}

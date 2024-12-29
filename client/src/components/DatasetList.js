@@ -1,12 +1,12 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import {Box, TextField, List, ListItem, ListItemText, IconButton, alpha, Icon} from '@mui/material';
+import {Box, TextField, List, ListItemButton, ListItemText, IconButton, alpha, ListItem} from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import useTheme from '@mui/material/styles/useTheme';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
-const DatasetList = ({datasets, switchVisibility, deleteItem}) => {
+const DatasetList = ({datasets, switchVisibility, deleteItem, setSelectedVehicleName}) => {
   useEffect(() => {
     console.log(datasets)
   }, [datasets])
@@ -33,7 +33,7 @@ const DatasetList = ({datasets, switchVisibility, deleteItem}) => {
         overflow: "auto"
       }}>
         {datasets.filter((data) => data.saved).map((data) => (
-            <ListItem key={data.id} divider sx={{":hover": {backgroundColor: getItemBackgroundColor()}, "transition": "background-color 0.2s"}}
+            <ListItem key={data.id} divider disablePadding
               secondaryAction={
                 <>
                   {visibilityButton(data.id)}
@@ -42,7 +42,9 @@ const DatasetList = ({datasets, switchVisibility, deleteItem}) => {
                   </IconButton>
                 </>
               }>
-              <ListItemText primary={data.label} />
+              <ListItemButton onClick={() => setSelectedVehicleName(data?.vehicleName)}>
+                <ListItemText primary={data.label} />
+              </ListItemButton>
             </ListItem>
         ))}
       </List>
