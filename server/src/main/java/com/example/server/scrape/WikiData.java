@@ -1,5 +1,7 @@
 package com.example.server.scrape;
 
+import java.util.Map;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,21 +15,16 @@ public class WikiData {
     private String cls;
     private String nation;
     private String rank;
-    private double abBr;
-    private double rbBr;
-    private double sbBr;   
+    private String abBr;
+    private String rbBr;
+    private String sbBr;   
     private String role;
-    private Integer researchCost;
-    private Integer purchaseCost;
+    private String researchCost;
+    private String purchaseCost;
 
     private String generalInfo;
     private String vehicleByUpdate;
-    private String hullArmor;
-    private String turretArmor;
-    private double powerToWeight;
-    private double maxForwardSpeed;
-    private double maxReverseSpeed;
-    private double weight;
-    private double enginePower;
     private String source;
+    
+    private Map<String, Map<String, String>> otherInfo;
 }

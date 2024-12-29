@@ -7,8 +7,12 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.util.HashMap;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.io.IOException;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
+import java.util.LinkedHashMap;
 
 @Service
 public class Scraper {
@@ -16,6 +20,27 @@ public class Scraper {
         String url = "https://wiki.warthunder.com/unit/" + vehicleName;
         try {
             Document doc = Jsoup.connect(url).get();
+            String cls = getCls(doc);
+            Map<String, Map<String, String>> otherInfo = new HashMap<>();
+            switch (cls) {
+                case "Ground Vehicles":
+                    otherInfo = getGroundVehicleOtherInfo(doc);
+                    break;
+
+                case "Bluewater Fleet":
+                    otherInfo = getNavalOtherInfo(doc);
+                    break;
+                case "Coastal Fleet":
+                    otherInfo = getNavalOtherInfo(doc);
+                    break;
+
+                case "Aviation":
+                    otherInfo = getAviationOtherInfo(doc);
+                    break;
+            
+                default:
+                    break;
+            }
             return new WikiData(
                 getWkName(doc),
                 getMedia(doc),
@@ -30,19 +55,52 @@ public class Scraper {
                 getPurchaseCost(doc),
                 getGeneralInfo(doc),
                 getVehicleByUpdate(doc),
-                getHullArmor(doc),
-                getTurretArmor(doc),
-                getPowerToWeight(doc),
-                getMaxForwardSpeed(doc),
-                getMaxReverseSpeed(doc),
-                getWeight(doc),
-                getEnginePower(doc), 
-                url
+                url,
+                otherInfo
             );
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private Map<String, Map<String, String>> getOtherInfo(Document doc, List<String> titles) {
+        Map<String, Map<String, String>> info = new LinkedHashMap<>();
+        for (String title: titles) {
+            Element wrapper = doc.getElementsMatchingOwnText("^" + title + "$").first().parent();
+            Elements blocks = wrapper.getElementsByClass("game-unit_chars-block");
+            List<Map<String, String>> blocksContent = new ArrayList<>();
+            for (Element block : blocks) {
+                blocksContent.add(getBlockContent(block));
+            }
+            info.put(title, mergeMaps(blocksContent));
+        }
+        info.putAll(getArmaments(doc));
+        return info;
+    }
+
+    private Map<String, Map<String, String>> getGroundVehicleOtherInfo(Document doc) {
+        List<String> titles = List.of(
+            "Survivability and armour",
+            "Mobility"
+        );
+        return getOtherInfo(doc, titles);
+    }
+
+
+    private Map<String, Map<String, String>> getAviationOtherInfo(Document doc) {
+        List<String> titles = List.of(
+            "Flight performance",
+            "General characteristics"
+        );
+        return getOtherInfo(doc, titles);
+    }
+
+    private Map<String, Map<String, String>> getNavalOtherInfo(Document doc) {
+        List<String> titles = List.of(
+            "Specification"
+        );
+        return getOtherInfo(doc, titles);
     }
 
     private String getWkName(Document doc) {
@@ -63,31 +121,33 @@ public class Scraper {
             return rank;
     }
 
-    private Map<String, Double> getBr(Document doc) {
-            Elements brWrapper = doc.getElementsByClass("game-unit_br");
-            Elements ranks = brWrapper.first().child(0).children();
-            Map<String, Double> brs = new HashMap<>();
-            for (Element rank : ranks) {
-                String mode = rank.getElementsByClass("mode").first().text();
-                double br = customParseDouble(rank.getElementsByClass("value").first().text());
-                switch (mode) {
-                    case "AB":
-                        brs.put(mode, br);
-                        break;
+    private Map<String, String> getBr(Document doc) {
+        Elements brBlocks = doc.getElementsByClass("game-unit_br-item");
+        Map<String, String> brs = new HashMap<>();
+        for (Element brBlock: brBlocks) {
+            String mode = brBlock.getElementsByClass("mode").first().text();
+            String br = brBlock.getElementsByClass("value").first().text();
+            switch (mode) {
+                case "AB":
+                    brs.put(mode, br);
+                    break;
+            
+                case "RB":
+                    brs.put(mode, br);
+                    break;
                 
-                    case "RB":
-                        brs.put(mode, br);
-                        break;
-                    
-                    case "SB":
-                        brs.put(mode, br);
-                        break;
+                case "SB":
+                    brs.put(mode, br);
+                    break;
 
-                    default:
-                        break;
-                }
+                default:
+                    break;
             }
-            return brs;
+            if (brs.size() == 3) {
+                break;
+            }
+        }
+        return brs;
     }
 
     private String getNation(Document doc) {
@@ -101,28 +161,32 @@ public class Scraper {
                     parent().getElementsByClass("text-truncate").text();
     }
 
-    private Integer getResearchCost(Document doc) {
+    private String getResearchCost(Document doc) {
         Elements researchWrapper = doc.getElementsMatchingOwnText("^Research$");
         if (researchWrapper.isEmpty()) {
-            return 0;
+            return "N/A";
         }
-        return customParseInt(researchWrapper.first().
+        return researchWrapper.first().
                     parent().getElementsByClass("game-unit_card-info_value").
-                    first().child(0).text().replaceAll(",", ""));
+                    first().child(0).text();
     }
 
-    private Integer getPurchaseCost(Document doc) {
+    private String getPurchaseCost(Document doc) {
         Elements purchaseWrapper = doc.getElementsMatchingOwnText("^Purchase$");
         if (purchaseWrapper.isEmpty()) {
-            return 0;
+            return "N/A";
         }
-        return customParseInt(purchaseWrapper.first().
+        return purchaseWrapper.first().
                     parent().getElementsByClass("game-unit_card-info_value").
-                    first().child(0).text().replace(",", ""));
+                    first().child(0).text();
     }
 
     private String getGeneralInfo(Document doc) {
-        return doc.getElementsByClass("content-markdown").first().html();
+        Element generalInfoElement = doc.getElementsByClass("content-markdown").first();
+        if (generalInfoElement == null) {
+            return "No description available";
+        }   
+        return generalInfoElement.text();
     }
 
     private String getVehicleByUpdate(Document doc) {
@@ -130,46 +194,108 @@ public class Scraper {
                     parent().getElementsByClass("name").first().text();
     }
 
-    private String getHullArmor(Document doc) {
-        return doc.getElementsMatchingOwnText("^Hull$").first().
-                    parent().getElementsByClass("game-unit_chars-value").first().text();
-    }
+    // private Map<String, String> getHullArmor(Document doc) {
+    //     String hullArmor = doc.getElementsMatchingOwnText("^Hull$").first().
+    //                         parent().getElementsByClass("game-unit_chars-value").first().text();
+    //     return Map.of("Hull Armor", hullArmor);
+    // }
 
-    private String getTurretArmor(Document doc) {
-        return doc.getElementsMatchingOwnText("^Turret$").first().
-                    parent().getElementsByClass("game-unit_chars-value").first().text();
-    }
+    // private Map<String, String> getTurretArmor(Document doc) {
+    //     String turretArmor = doc.getElementsMatchingOwnText("^Turret$").first().
+    //                         parent().getElementsByClass("game-unit_chars-value").first().text();
+    //     return Map.of("Turret Armor", turretArmor);
+    // }
 
-    private double getPowerToWeight(Document doc) {
-        return customParseDouble(doc.getElementsMatchingOwnText("^Power-to-weight ratio$").first().
-                    parent().getElementsByClass("show-char-rb-mod-ref").first().text());
-    }
+    // private Map<String, String> getPowerToWeight(Document doc) {
+    //     Double powerToWeight = customParseDouble(doc.getElementsMatchingOwnText("^Power-to-weight ratio$").first().
+    //                         parent().getElementsByClass("show-char-rb-mod-ref").first().text());
+    //     return Map.of("Power to Weight", powerToWeight);
+    // }
 
-    private double getMaxForwardSpeed(Document doc) {
-        return customParseDouble(doc.getElementsMatchingOwnText("^Forward$").first().
-                    parent().getElementsByClass("show-char-rb").first().text());
-    }
+    // private Map<String, Double> getMaxForwardSpeed(Document doc) {
+    //     Double maxForwardSpeed = customParseDouble(doc.getElementsMatchingOwnText("^Forward$").first().
+    //                         parent().getElementsByClass("show-char-rb").first().text());
+    //     return Map.of("Max Forward Speed", maxForwardSpeed);
+    // }
 
-    private double getMaxReverseSpeed(Document doc) {
-        return customParseDouble(doc.getElementsMatchingOwnText("^Backward$").first().
-                    parent().getElementsByClass("show-char-rb").first().text());
-    }
+    // private Map<String, Double> getMaxReverseSpeed(Document doc) {
+    //     Double maxReverseSpeed = customParseDouble(doc.getElementsMatchingOwnText("^Backward$").first().
+    //                         parent().getElementsByClass("show-char-rb").first().text());
+    //         return Map.of("Max Reverse Speed", maxReverseSpeed);
+    // }
 
-    private double getWeight(Document doc) {
-        return customParseDouble(doc.getElementsMatchingOwnText("^Weight$").first().
-                    parent().getElementsByClass("game-unit_chars-value").first().text().replaceAll("t", ""));
-    }
+    // private Map<String, Double> getWeight(Document doc) {
+    //     Double weight = customParseDouble(doc.getElementsMatchingOwnText("^Weight$").first().
+    //                         parent().getElementsByClass("game-unit_chars-value").first().text());
+    //     return Map.of("Weight", weight);
+    // }
 
-    private double getEnginePower(Document doc) {
-        return customParseDouble(doc.getElementsMatchingOwnText("^Engine power$").first().
-                    parent().getElementsByClass("show-char-rb-mod-ref").first().text());
+    // private Map<String, Double> getEnginePower(Document doc) {
+    //     Double enginePower = customParseDouble(doc.getElementsMatchingOwnText("^Engine power$").first().
+    //                         parent().getElementsByClass("show-char-rb-mod-ref").first().text());
+    //     return Map.of("Engine Power", enginePower);
+    // }
+
+    private Map<String, Map<String, String>> getArmaments(Document doc) {
+        Map<String, Map<String, String>> armamentsInfo = new LinkedHashMap<>();
+        // Element defaultPreset = doc.getElementById("weapon-preset-0");
+        Elements defaultPresets = doc.getElementById("weapon").getElementsByClass("active");
+        if (defaultPresets.isEmpty()) {
+            return armamentsInfo;
+        }
+        for (Element defaultPreset: defaultPresets) {
+            Elements armamentWrappers = defaultPreset.getElementsByClass("game-unit_weapon");
+            for (Element armament: armamentWrappers) {
+                String weaponTitle = armament.getElementsByClass("game-unit_weapon-title").first().text();
+                Map<String, String> weaponInfo = new LinkedHashMap<>();
+                Elements weaponBlocks = armament.getElementsByClass("game-unit_chars-block");
+                for (Element weaponBlock: weaponBlocks) {
+                    weaponInfo.putAll(getBlockContent(weaponBlock));
+                }
+                armamentsInfo.put(weaponTitle, weaponInfo);
+            }
+
+        }
+        return armamentsInfo;
     }
     
-    private double customParseDouble(String str) {
-        return Double.parseDouble(str.replaceAll("[^0-9.]", ""));
+    private Map<String, String> mergeMaps(List<Map<String, String>> maps) {
+        Map<String, String> mergedMap = new LinkedHashMap<>();
+        for (Map<String, String> map : maps) {
+            mergedMap.putAll(map);
+        }
+        return mergedMap;
     }
-
-    private int customParseInt(String str) {
-        return Integer.parseInt(str.replaceAll("[^0-9]", ""));
+    
+    private Map<String, String> getBlockContent(Element element) {
+        Map<String, String> blockContent = new LinkedHashMap<>();
+        Element header = element.getElementsByClass("game-unit_chars-header").first();
+        Elements valueElements = element.getElementsByClass("game-unit_chars-value");
+        Elements siblings = header.siblingElements();
+        Boolean hasValue = siblings.hasClass("game-unit_chars-value");
+        for (Element valueElement : valueElements) {
+            String headerText = header.ownText();
+            Element parent = valueElement.parent();
+            String name = parent.child(0).text();
+            if (name.equals("")) {
+                name = headerText;
+            } else if (parent.hasClass("game-unit_chars-subline") && !hasValue) {
+                name = headerText + "(" + name +  ")";
+            }
+            String value = "";
+            List<Node> nodes = valueElement.childNodes();
+            for (Node node: nodes) {
+                if (node instanceof TextNode) {
+                    value += ((TextNode) node).text();
+                } else if (node instanceof Element) {
+                    Element child = (Element) node;
+                    if (child.hasClass("show-char-rb-mod-ref") || child.hasClass("show-char-rb")) {
+                        value += child.text();
+                    }
+                }
+            }
+            blockContent.put(name, value);
+        }
+        return blockContent;
     }
 }
