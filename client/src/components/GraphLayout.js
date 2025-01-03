@@ -5,6 +5,7 @@ import { useState } from 'react';
 import Graph from './Graph';
 import DatasetList from './DatasetList';
 import WikiInfoCard from './WikiInfoCard';
+import RecentDataTable from './RecentDataTable';
 
 const DisplayPanel = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -106,7 +107,7 @@ const GraphLayout = ({Selector}) => {
                     <WikiInfoCard vehicleName={getVehicleName()}/>
                 </Grid>
                 <Grid item size={6}>
-
+                    <RecentDataTable vehicleName={getVehicleName()}/>
                 </Grid>
             </Grid>
         </Box>
