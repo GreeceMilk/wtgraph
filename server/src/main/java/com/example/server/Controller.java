@@ -18,8 +18,8 @@ import com.example.server.scrape.WikiData;
 
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:3000")
 public class Controller {
     @Autowired
     private NationService nationService;
