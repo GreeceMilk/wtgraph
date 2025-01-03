@@ -93,6 +93,9 @@ const theme = createTheme(
       overline: {
         fontFamily: bodyFont,
       }
+    }, 
+    shape: {
+      borderRadius: 12,
     }
   }
 )

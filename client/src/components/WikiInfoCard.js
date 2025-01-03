@@ -240,7 +240,7 @@ const WikiInfoCard = ({vehicleName}) => {
     }, [vehicleName])
 
   return (
-    <Card sx={{borderRadius: 4}}>
+    <Card>
         {chooseDisplayContent()}
     </Card>
   )

@@ -9,7 +9,6 @@ import WikiInfoCard from './WikiInfoCard';
 const DisplayPanel = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
     borderColor: theme.palette.primary.dark,
-    borderRadius: 5 * theme.shape.borderRadius,
     padding: theme.spacing(2),
     // textAlign: 'center',
     height: '100%',
@@ -98,7 +97,7 @@ const GraphLayout = ({Selector}) => {
                 </Grid>
             </Grid>
             <Box>
-                <Paper elevation={2} sx={{ p: 4, borderRadius: 4}}>
+                <Paper elevation={2} sx={{ p: 4}}>
                     <Graph data={data} outputX={outputX}></Graph>
                 </Paper>
             </Box>
