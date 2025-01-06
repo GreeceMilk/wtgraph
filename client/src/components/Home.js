@@ -13,7 +13,7 @@ const Home = ({data, wkName, outputX, outputY}) => {
         <Typography variant='h4' align='center'> Welcome to WTGRAPH </Typography>
         <Typography variant='h6' align='center'> Take a look at all time {convertSnakeToSpace(outputY)} of {convertSnakeToSpace(wkName)} </Typography>
       </Container>
-      <Paper elevation={2} sx={{ p: 2, m: 4, borderRadius: 4}}>
+      <Paper elevation={2} sx={{ p: 2, m: 4}}>
         <Graph data={data} outputX={outputX}/>
       </Paper>
     </Box>

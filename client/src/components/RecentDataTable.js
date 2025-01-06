@@ -79,7 +79,6 @@ const RecentDataTable = ({vehicleName}) => {
         const sbKeys = keys.filter((key) => key.includes("sb"));
         const otherKeys = keys.filter((key) => !abKeys.includes(key) && !rbKeys.includes(key) && !sbKeys.includes(key));
         return (
-            <TableContainer component={Paper} sx={{p: 1}}>
                 <Table size='small'>
                     <caption>
                         The most recent data for the {vehicleName}
@@ -106,7 +105,6 @@ const RecentDataTable = ({vehicleName}) => {
                         <CollapsableRow groupName="SB Stats" keys={sbKeys} data={recentData} />
                     </TableBody>
                 </Table>
-            </TableContainer>
         )
     }
     
@@ -141,9 +139,9 @@ const RecentDataTable = ({vehicleName}) => {
     
 
   return (
-    <>
+    <Paper sx={{p: 1}}>
         {chooseDisplayContent()}
-    </>
+    </Paper>
   )
 }
 

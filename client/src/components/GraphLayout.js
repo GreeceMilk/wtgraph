@@ -71,14 +71,14 @@ const GraphLayout = ({Selector}) => {
     <>
         <Box mx={10}>
             <Grid container spacing={5}>
-                <Grid item>
+                <Grid item size={{xs: 12, md: "auto"}}>
                     <DisplayPanel variant='outlined'>
                         <Typography variant='h5' color='secondary.dark' sx={{pl: 1, textAlign: "left", mb: 2}}>Filter</Typography>
                         <Selector data={data} setData={setData} outputX={outputX} setOutputX={setOutputX} 
                         setDataSetName={setDataSetName} setIsDataSetNameDisabled={setIsDataSetNameDisabled}/>
                     </DisplayPanel>
                 </Grid>
-                <Grid item size={"grow"} flexGrow={1}>
+                <Grid item size={{xs: 12, md: "grow"}} flexGrow={1}>
                     <Box sx={{height: '100%'}}>
                         <DisplayPanel variant="outlined">
                             <Typography variant='h5' color='secondary.dark' sx={{pl: 2, textAlign: "left"}}>Dataset List</Typography>
@@ -103,10 +103,10 @@ const GraphLayout = ({Selector}) => {
                 </Paper>
             </Box>
             <Grid container spacing={5} sx={{mt: 4}}>
-                <Grid item size={6}>
+                <Grid item size={{xs: 12, md: 6}}>
                     <WikiInfoCard vehicleName={getVehicleName()}/>
                 </Grid>
-                <Grid item size={6}>
+                <Grid item size={{xs: 12, md: 6}}>
                     <RecentDataTable vehicleName={getVehicleName()}/>
                 </Grid>
             </Grid>
