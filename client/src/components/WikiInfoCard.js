@@ -95,7 +95,7 @@ const WikiInfoCard = ({vehicleName}) => {
         const keys = Object.keys(obj);
         // console.log("Obj", obj);
         return (
-            <Stack direction={"row"} divider={<Divider orientation='vertical' flexItem/>} spacing={1} sx={{justifyContent: 'center', height: "auto"}}>
+            <Stack direction={"row"} divider={<Divider orientation='vertical' flexItem/>} spacing={1} sx={{justifyContent: 'center', height: "auto", flexWrap: 'wrap'}}>
                 {
                     keys.map((key) => (
                             <InfoItem key={key} name={key} content={obj[key]}/>
@@ -164,12 +164,12 @@ const WikiInfoCard = ({vehicleName}) => {
                     sx={{width: "100%", height: "auto"}}
                 />
                 <Box sx={(theme) => ({ position: "absolute", left: 0, right: 0, top: 0, bottom: 0, backgroundImage: `${backgroundGradient(theme)}`})}/>
-                <Box sx={(theme) => ({position: "absolute", left: "40%", right: theme.spacing(2), top: "10%", bottom: "10%", opacity: 0.9, alignContent: "center"})}>
+                <Box sx={(theme) => ({position: "absolute", right: theme.spacing(2), top: "10%", bottom: "10%", opacity: 0.9, alignContent: "center"})}>
                     <Stack direction={"column"} spacing={2}>
                         <Typography variant='h4' sx={{textAlign: "end", fontWeight: "bold"}}>
                             {wikiInfo?.wkName}
                         </Typography>
-                        <Paper>
+                        <Paper sx={{p: 1}}>
                             <Stack direction={"row"} divider={<Divider orientation='vertical' flexItem/>} spacing={1} sx={{justifyContent: 'center'}}>
                                 <InfoItem name={"Class"} content={wikiInfo?.cls}/>
                                 <InfoItem name={"Nation"} content={wikiInfo?.nation}/>
@@ -178,7 +178,7 @@ const WikiInfoCard = ({vehicleName}) => {
                             </Stack>
                         </Paper>
 
-                        <Paper>
+                        <Paper sx={{p: 1}}>
 
                             <Stack direction={"row"} divider={<Divider orientation='vertical' flexItem/>} spacing={1} sx={{justifyContent: 'center'}}>
                                 <InfoItem name={"AB BR"} content={wikiInfo?.abBr}/>

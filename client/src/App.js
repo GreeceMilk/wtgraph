@@ -96,6 +96,13 @@ const theme = createTheme(
     }, 
     shape: {
       borderRadius: 12,
+    },
+    components: {
+      MuiStack: {
+        defaultProps: {
+          useFlexGap: true,
+        }
+      }
     }
   }
 )
