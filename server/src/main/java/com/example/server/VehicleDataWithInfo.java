@@ -8,5 +8,5 @@ public class VehicleDataWithInfo {
     VehicleName vehicleName;
     String outputX;
     String outputY;
-    List<VehicleData> vehicleData;
+    List<GraphData> vehicleData;
 }

@@ -99,12 +99,12 @@ public class NationService {
     }
 
     // get a nation's data according to cls, nation, and output field
-    List<NationData> getNationData(String mode, String brRange, String cls, String nation, String output, Double lowerBr) {
+    List<GraphData> getNationData(String mode, String brRange, String cls, String nation, String output, Double lowerBr) {
         NationRepo<? extends Nation, ObjectId> repo = chooseDb(mode, brRange);
         if (repo == null) {
             return List.of();
         } else {
-            List<NationData> nationData = repo.findByNationAndCls(nation, cls, output, mode+"_lower_br", lowerBr);
+            List<GraphData> nationData = repo.findByNationAndCls(nation, cls, output, mode+"_lower_br", lowerBr);
             // TODO: add sort after getting data Sort sort = Sort.by("date").ascending();
             if (nationData.isEmpty()) {
                 return List.of();

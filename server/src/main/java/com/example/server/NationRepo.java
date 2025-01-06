@@ -15,7 +15,7 @@ public interface NationRepo<T, ID> extends MongoRepository<T, ID> {
 
     // @Query(value = "{'nation': ?0, 'cls': ?1, 'ab_lower_br': ?3}", fields = "{'date' : 1, ?2: 1, '_id': 0}")
     @Aggregation(pipeline = {"{$match: {'nation': ?0, 'cls': ?1, ?3: ?4}}", "{$project: {'xData': '$date', 'yData': '$?2', '_id': 0}}", "{$sort: {'xData': 1}}"})
-    List<NationData> findByNationAndCls(String nation, String cls, String output, String mode, Double lowerBr);
+    List<GraphData> findByNationAndCls(String nation, String cls, String output, String mode, Double lowerBr);
 
     // @Aggregation(pipeline = {"{$group: {_id: '$nation'}}", "{$project: {'_id': 0, 'nation': '$_id'}}"})
     // List<String> listNation();

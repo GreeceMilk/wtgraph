@@ -20,7 +20,7 @@ public interface VehicleRepo extends MongoRepository<Vehicle, ObjectId> {
     Optional<Vehicle> findByWkName(String WkName);
 
     @Aggregation(pipeline = {"{$match: {'name': ?0, ?2: {$ne: null}}}", "{$sort: {'?1': 1}}", "{$project: {'xData': '$?1', 'yData': '$?2'}}}"})
-    List<VehicleData> findByNameAndOutput(String name, String outputX, String outputY);
+    List<GraphData> findByNameAndOutput(String name, String outputX, String outputY);
 
     @Aggregation(pipeline = {"{$match: {'name': ?0, ?2: {$ne: null}}}", "{$sort: {'?1': 1}}", "{$project: {'xData': '$?1', 'yData': '$?2'}}}", "{$group: {'_id': {xData: '$xData', yData: '$yData'}, 'r': {$count: {}}}}", "{$project: {'xData': '$_id.xData', 'yData': '$_id.yData', 'r': 1}}"})
     List<VehicleDataWithCount> findByNameAndOutputNonUnique(String name, String outputX, String outputY);

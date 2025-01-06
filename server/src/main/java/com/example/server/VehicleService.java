@@ -24,7 +24,7 @@ public class VehicleService {
         return vehicleRepo.findBrList(mode+"_br");
     }
 
-    List<VehicleData> getVehicleData(String name, String outputX, String outputY) {
+    List<GraphData> getVehicleData(String name, String outputX, String outputY) {
         return vehicleRepo.findByNameAndOutput(name, outputX, outputY);
     }
 
@@ -45,7 +45,7 @@ public class VehicleService {
         return outputNames;
     }
 
-    List<VehicleData> getVehicleRandomOutput(String name) {
+    List<GraphData> getVehicleRandomOutput(String name) {
         List<String> outputNames = getOutputNames();
         String outputX = "date";
         String outputY = outputNames.get((int)(Math.random() * outputNames.size()));
@@ -63,7 +63,7 @@ public class VehicleService {
             List<String> outputNames = List.of("ab_win_rate", "rb_win_rate");
             String outputX = "date";
             String outputY = outputNames.get((int)(Math.random() * outputNames.size()));
-            List<VehicleData> vehicleData = getVehicleData(vehicleName.getName(), outputX, outputY);
+            List<GraphData> vehicleData = getVehicleData(vehicleName.getName(), outputX, outputY);
             if (!vehicleData.isEmpty()) {
                 VehicleDataWithInfo vehicleDataWithInfo = new VehicleDataWithInfo();
                 vehicleDataWithInfo.setVehicleName(vehicleName);

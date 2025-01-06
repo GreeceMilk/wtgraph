@@ -53,10 +53,10 @@ public class Controller {
 	
 	
 	@GetMapping("/nationData")
-	public ResponseEntity<List<NationData>> getNationData(@RequestParam String mode, @RequestParam String brRange, @RequestParam String nation, @RequestParam String cls, @RequestParam String output, @RequestParam Double lowerBr) {
+	public ResponseEntity<List<GraphData>> getNationData(@RequestParam String mode, @RequestParam String brRange, @RequestParam String nation, @RequestParam String cls, @RequestParam String output, @RequestParam Double lowerBr) {
 		// TODO: add ouput for x and y axis separatly
-		List<NationData> returnValue = nationService.getNationData(mode, brRange, cls, nation, output, lowerBr);
-		return new ResponseEntity<List<NationData>>(returnValue, returnValue.isEmpty()?HttpStatus.NO_CONTENT: HttpStatus.OK);
+		List<GraphData> returnValue = nationService.getNationData(mode, brRange, cls, nation, output, lowerBr);
+		return new ResponseEntity<List<GraphData>>(returnValue, returnValue.isEmpty()?HttpStatus.NO_CONTENT: HttpStatus.OK);
 	}
 
 	@GetMapping("/vehicleList")
@@ -70,7 +70,7 @@ public class Controller {
 	}
 
 	@GetMapping("/vehicleData")
-	public ResponseEntity<List<VehicleData>> getVehicleData(@RequestParam String name, @RequestParam String outputX, @RequestParam String outputY) {
+	public ResponseEntity<List<GraphData>> getVehicleData(@RequestParam String name, @RequestParam String outputX, @RequestParam String outputY) {
 		return new ResponseEntity<>(vehicleService.getVehicleData(name, outputX, outputY), HttpStatus.OK);
 	}
 	
@@ -80,7 +80,7 @@ public class Controller {
 	}
 
 	@GetMapping("/vehicleRandomOutput")
-	public ResponseEntity<List<VehicleData>> getVehicleRandomOutput(@RequestParam String name) {
+	public ResponseEntity<List<GraphData>> getVehicleRandomOutput(@RequestParam String name) {
 		return new ResponseEntity<>(vehicleService.getVehicleRandomOutput(name), HttpStatus.OK);
 	}
 
