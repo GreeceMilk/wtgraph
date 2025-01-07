@@ -61,7 +61,7 @@ const RecentDataTable = ({vehicleName}) => {
     async function getRecentData() {
         if (areAllObjectsValid([vehicleName])) {
             try {
-                const response = await api.get("/api/mostRecentData", {params: {name: vehicleName}});
+                const response = await api.get("/api/mostRecentVehicleData", {params: {name: vehicleName}});
                 setRecentData(response.data);
                 setLoading(false);
                 console.log("RecentData: ", recentData);  
