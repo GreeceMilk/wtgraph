@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public abstract class Nation {
-    private String brRange;
+    // private String brRange;
     @Id
     private ObjectId id;
     private String cls;

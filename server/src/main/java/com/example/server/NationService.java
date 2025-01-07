@@ -1,6 +1,7 @@
 package com.example.server;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -18,12 +19,14 @@ import org.springframework.stereotype.Service;
 import com.example.server.nationrb.*;
 import com.example.server.nationab.*;
 import com.example.server.nationsb.*;
-import com.fasterxml.jackson.databind.ser.std.StdArraySerializers.DoubleArraySerializer;
+
+import java.util.ArrayList;
 
 @Service
 public class NationService {
 
     private final Map<String, NationRepo<? extends Nation, ObjectId>> repoMap;
+    private final Map<String, Nation> dataMap;
 
     @Autowired
     private final MongoTemplate mongoTemplate;
@@ -32,6 +35,9 @@ public class NationService {
     public NationService(NationRb1Repo nationRb1Repo, NationRb0Repo nationRb0Repo, NationRbAllRepo nationRbAllRepo,
                          NationAb0Repo nationAb0Repo, NationAb1Repo nationAb1Repo, NationAbAllRepo nationAbAllRepo,
                          NationSb0Repo nationSb0Repo, NationSb1Repo nationSb1Repo, NationSbAllRepo nationSbAllRepo,
+                         NationRb1 nationRb1, NationRb0 nationRb0, NationRbAll nationRbAll,
+                        NationAb0 nationAb0, NationAb1 nationAb1, NationAbAll nationAbAll,
+                        NationSb0 nationSb0, NationSb1 nationSb1, NationSbAll nationSbAll,
                          MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
         this.repoMap = Map.of(
@@ -44,6 +50,17 @@ public class NationService {
             "sb0", nationSb0Repo, 
             "sb1", nationSb1Repo,
             "sball", nationSbAllRepo
+        );
+        this.dataMap = Map.of(
+            "rb1", nationRb1,
+            "rb0", nationRb0,
+            "rball", nationRbAll,
+            "ab1", nationAb1,
+            "ab0", nationAb0,
+            "aball", nationAbAll,
+            "sb0", nationSb0,
+            "sb1", nationSb1,
+            "sball", nationSbAll
         );
     }
 
@@ -112,6 +129,19 @@ public class NationService {
                 return nationData;
             }
         }
+    }
+
+    Map<String, Nation> mostRecentData(String nation) {
+        List<String> modes = List.of("rb", "ab", "sb");
+        String brRange = "all";
+        Map<String, Nation> results = new HashMap<>();
+        Aggregation mostRecentData = Aggregation.newAggregation(Aggregation.match(new Criteria("nation").is(nation)), Aggregation.sort(Sort.by("date").descending()), Aggregation.limit(1));
+        for (String mode : modes) {
+            // NationRepo<? extends Nation, ObjectId> repo = chooseDb(m, brRange);
+            AggregationResults<? extends Nation> result = mongoTemplate.aggregate(mostRecentData, mode + "_ranks_" + brRange, dataMap.get(mode+brRange).getClass());
+            results.put(mode, result.getUniqueMappedResult());
+        }
+        return results;
     }
 
 }

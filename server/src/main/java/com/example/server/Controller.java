@@ -2,6 +2,7 @@ package com.example.server;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Map;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,10 +105,14 @@ public class Controller {
 		return new ResponseEntity<>(scraper.scrapeWTWiki(name), HttpStatus.OK);
 	}
 
-	@GetMapping("/mostRecentData")
-	public ResponseEntity<Vehicle> getMostRecentData(@RequestParam String name) {
+	@GetMapping("/mostRecentVehicleData")
+	public ResponseEntity<Vehicle> getMostRecentVehicleData(@RequestParam String name) {
 		return new ResponseEntity<>(vehicleService.mostRecentData(name), HttpStatus.OK);
 	}
 	
+	@GetMapping("/mostRecentNationData")
+	public ResponseEntity<Map<String, Nation>> getMostRecentNationData(@RequestParam String nation) {
+		return new ResponseEntity<>(nationService.mostRecentData(nation), HttpStatus.OK);
+	}
 	
 }
