@@ -1,5 +1,6 @@
 package com.example.server;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Map;
@@ -114,5 +115,11 @@ public class Controller {
 	public ResponseEntity<Map<String, Nation>> getMostRecentNationData(@RequestParam String nation) {
 		return new ResponseEntity<>(nationService.mostRecentData(nation), HttpStatus.OK);
 	}
+
+	@GetMapping("/majorUpdates")
+	public ResponseEntity<Map<Date, String>> getMajorUpdates() {
+		return new ResponseEntity<>(scraper.scrapeEvent(), HttpStatus.OK);	
+	}
+	
 	
 }

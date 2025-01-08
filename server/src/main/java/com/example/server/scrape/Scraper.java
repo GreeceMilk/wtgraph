@@ -2,22 +2,38 @@ package com.example.server.scrape;
 
 import org.springframework.stereotype.Service;
 import java.util.Map;
+import java.util.NoSuchElementException;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import java.util.LinkedHashMap;
 
+import org.openqa.selenium.By;
 @Service
 public class Scraper {
+    private final String vehicleUrl = "https://wiki.warthunder.com/unit/";
+    private final String eventUrl = "https://wiki.warthunder.com/history_timelapse";
+
     public WikiData scrapeWTWiki(String vehicleName) {
-        String url = "https://wiki.warthunder.com/unit/" + vehicleName;
+        String url = vehicleUrl + vehicleName;
         try {
             Document doc = Jsoup.connect(url).get();
             String cls = getCls(doc);
@@ -194,48 +210,6 @@ public class Scraper {
                     parent().getElementsByClass("name").first().text();
     }
 
-    // private Map<String, String> getHullArmor(Document doc) {
-    //     String hullArmor = doc.getElementsMatchingOwnText("^Hull$").first().
-    //                         parent().getElementsByClass("game-unit_chars-value").first().text();
-    //     return Map.of("Hull Armor", hullArmor);
-    // }
-
-    // private Map<String, String> getTurretArmor(Document doc) {
-    //     String turretArmor = doc.getElementsMatchingOwnText("^Turret$").first().
-    //                         parent().getElementsByClass("game-unit_chars-value").first().text();
-    //     return Map.of("Turret Armor", turretArmor);
-    // }
-
-    // private Map<String, String> getPowerToWeight(Document doc) {
-    //     Double powerToWeight = customParseDouble(doc.getElementsMatchingOwnText("^Power-to-weight ratio$").first().
-    //                         parent().getElementsByClass("show-char-rb-mod-ref").first().text());
-    //     return Map.of("Power to Weight", powerToWeight);
-    // }
-
-    // private Map<String, Double> getMaxForwardSpeed(Document doc) {
-    //     Double maxForwardSpeed = customParseDouble(doc.getElementsMatchingOwnText("^Forward$").first().
-    //                         parent().getElementsByClass("show-char-rb").first().text());
-    //     return Map.of("Max Forward Speed", maxForwardSpeed);
-    // }
-
-    // private Map<String, Double> getMaxReverseSpeed(Document doc) {
-    //     Double maxReverseSpeed = customParseDouble(doc.getElementsMatchingOwnText("^Backward$").first().
-    //                         parent().getElementsByClass("show-char-rb").first().text());
-    //         return Map.of("Max Reverse Speed", maxReverseSpeed);
-    // }
-
-    // private Map<String, Double> getWeight(Document doc) {
-    //     Double weight = customParseDouble(doc.getElementsMatchingOwnText("^Weight$").first().
-    //                         parent().getElementsByClass("game-unit_chars-value").first().text());
-    //     return Map.of("Weight", weight);
-    // }
-
-    // private Map<String, Double> getEnginePower(Document doc) {
-    //     Double enginePower = customParseDouble(doc.getElementsMatchingOwnText("^Engine power$").first().
-    //                         parent().getElementsByClass("show-char-rb-mod-ref").first().text());
-    //     return Map.of("Engine Power", enginePower);
-    // }
-
     private Map<String, Map<String, String>> getArmaments(Document doc) {
         Map<String, Map<String, String>> armamentsInfo = new LinkedHashMap<>();
         // Element defaultPreset = doc.getElementById("weapon-preset-0");
@@ -297,5 +271,44 @@ public class Scraper {
             blockContent.put(name, value);
         }
         return blockContent;
+    }
+
+    public Map<Date, String> scrapeEvent() {
+        Map<Date, String> events = new LinkedHashMap<>();
+        FirefoxOptions options = new FirefoxOptions();
+        options.addArguments("--headless");
+        options.setBinary("C:\\Program Files\\Mozilla Firefox\\firefox.exe");
+        try {
+            System.setProperty("webdriver.gecko.driver", "C:\\wtgraph\\geckodriver.exe");
+            WebDriver driver = new FirefoxDriver(options);
+            driver.get(eventUrl);
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+            List<WebElement> updates = driver.findElements(By.cssSelector("div[data-section=updates]"));
+            for (WebElement update: updates) {
+                events.putAll(singleEvent(driver, update));
+            }
+            driver.quit();
+            return events;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    private Map<Date, String> singleEvent(WebDriver driver, WebElement event) {
+        try {
+            String eventTitle = event.findElement(By.cssSelector("div.cstm_event_item_title")).getText();
+            WebElement dateElement = event.findElement(By.xpath(".//div[div[contains(text(), 'Release date:')]]"));
+            String eventDateText = dateElement.findElement(By.cssSelector(".cstm_event_feature_breadcrumb")).getText();
+            SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
+            Date eventDate = formatter.parse(eventDateText);
+            return Map.of(eventDate, eventTitle);
+        } catch (org.openqa.selenium.NoSuchElementException e) {
+            return Map.of();
+        } catch (ParseException e) {
+            return Map.of();
+        }
+
     }
 }
