@@ -22,8 +22,11 @@ const Graph = ({data, outputX}) => {
     const [YGridChecked, setYGridChecked] = useState(false);
     const [enableZoom, setEnableZoom] = useState(false);
     const [enablePan, setEnablePan]= useState(false);
+    const [enableAnnotation, setEnableAnnotation] = useState(false);
+    const [showAllAnnotations, setShowAllAnnotations] = useState(false);
     const [updateVisible, setUpdateVisible] = useState([]);
     const [options, setOptions] = useState(null);
+    const [GraphType, setGraphType] = useState(null);
     const updates = useContext(UpdateInfoContext);
 
     function produceLineAnnotation(updates) {
@@ -33,7 +36,7 @@ const Graph = ({data, outputX}) => {
         let result = {};
         const keys = Object.keys(updates);
         for (let i = 0; i < keys.length; i++) {
-            const labelDisplay = updateVisible.includes(keys[i]) ? true : false;
+            const labelDisplay = (updateVisible.includes(keys[i]) || showAllAnnotations) ? true : false;
             let time = keys[i];
             let id = time;
             result[id] = {
@@ -68,11 +71,6 @@ const Graph = ({data, outputX}) => {
             }
         });
     }
-
-    function addUpdateVisibility(id) {
-        setUpdateVisible((prevState) => {return [...prevState, id]});
-    }
-
 
     function getGridLineColor() {
         return [theme.palette.primary.main, "20"].join("");
@@ -154,7 +152,7 @@ const Graph = ({data, outputX}) => {
                     
                 },
                 annotation: {
-                    annotations: produceLineAnnotation(updates),
+                    annotations: enableAnnotation?produceLineAnnotation(updates):{},
                 }
             },
             scales: {
@@ -202,18 +200,23 @@ const Graph = ({data, outputX}) => {
 
     function chooseGraph(data, outputX) {
         if (data === null) {
-            return null;
+            setGraphType(null);
         } else if (outputX === "date") {
-            return (<Line data={data} options={options}></Line>);
+            setGraphType(Line);
         } else {
-            return (<Scatter data={data} options={options}></Scatter>);
+            setGraphType(Scatter);
         }
     }
 
     useEffect(() => {
         setOptions(graphOptions(data));
         console.log("setOptions");
-    }, [data, outputX, updates, updateVisible])
+    }, [data, outputX, updates, updateVisible, enablePan, enableZoom, enableAnnotation, XGridChecked, YGridChecked, enableAnnotation, showAllAnnotations])
+
+    useEffect(() => {
+        chooseGraph(data, outputX);
+    }, [data, outputX])
+
 
     // useEffect(() => {
     //     if (!options) return;
@@ -237,12 +240,14 @@ const Graph = ({data, outputX}) => {
 
   return (
     <div>
-        {chooseGraph(data, outputX)}
+        {GraphType?<GraphType data={data} options={options}></GraphType>:null}
         <Box>
             <FormGroup row={true} sx={{justifyContent: 'center', mt: 2}}>
                 <FormControlLabel control={<Switch color='secondary' checked={XGridChecked} onChange={(event, value) => setXGridChecked(value)}/>} label="X Grid"  labelPlacement='bottom'/>
                 <FormControlLabel control={<Switch color='secondary' checked={YGridChecked} onChange={(event, value) => setYGridChecked(value)}/>} label="Y Grid"  labelPlacement='bottom'/>
                 <FormControlLabel control={<Switch color='secondary' checked={enablePan} onChange={(event, value) => {setEnablePan(value); setEnableZoom(value);}}/>} label="Enable Pan/Zoom"  labelPlacement='bottom'/>
+                <FormControlLabel control={<Switch color='secondary' checked={enableAnnotation} onChange={(event, value) => {setEnableAnnotation(value);}}/>} label="Enable annotation"  labelPlacement='bottom'/>
+                <FormControlLabel control={<Switch color='secondary' checked={showAllAnnotations} onChange={(event, value) => {setShowAllAnnotations(value);}}/>} label="Show all annotations label"  labelPlacement='bottom'/>
             </FormGroup>
         </Box>
     </div>
