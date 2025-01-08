@@ -1,23 +1,78 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Line, Bubble, Scatter } from "react-chartjs-2";
-import {Chart, registerables} from "chart.js";
+import {Chart, plugins, registerables} from "chart.js";
 import { isValid, parseISO } from "date-fns";
+import { useContext, useState } from 'react';
 import autocolors from "chartjs-plugin-autocolors";
 import zoomPlugin, { zoom } from "chartjs-plugin-zoom";
+import annotationPlugin from "chartjs-plugin-annotation";
+import {v4 as uuidv4} from 'uuid';
 // import { useColorScheme, useMediaQuery } from '@mui/material';
+import UpdateInfoContext from '../contexts/UpdateInfoContext';
 
 import { useTheme } from '@mui/material/styles';
 import { Switch, Grid2 as Grid, Box, FormGroup, FormControlLabel } from '@mui/material';
 
-Chart.register(...registerables, autocolors, zoomPlugin);
+Chart.register(...registerables, autocolors, zoomPlugin, annotationPlugin);
 
 const Graph = ({data, outputX}) => {
 
     const theme = useTheme();
-    const [XGridChecked, setXGridChecked] = React.useState(false);
-    const [YGridChecked, setYGridChecked] = React.useState(false);
-    const [enableZoom, setEnableZoom] = React.useState(false);
-    const [enablePan, setEnablePan] = React.useState(false);
+    const [XGridChecked, setXGridChecked] = useState(false);
+    const [YGridChecked, setYGridChecked] = useState(false);
+    const [enableZoom, setEnableZoom] = useState(false);
+    const [enablePan, setEnablePan]= useState(false);
+    const [updateVisible, setUpdateVisible] = useState([]);
+    const [options, setOptions] = useState(null);
+    const updates = useContext(UpdateInfoContext);
+
+    function produceLineAnnotation(updates) {
+        if (updates === null || data?.datasets.length === 0) {
+            return null;
+        }
+        let result = {};
+        const keys = Object.keys(updates);
+        for (let i = 0; i < keys.length; i++) {
+            const labelDisplay = updateVisible.includes(keys[i]) ? true : false;
+            let time = keys[i];
+            let id = time;
+            result[id] = {
+                type: 'line',
+                xMin: time,
+                xMax: time,
+                borderColor: 'rgb(255, 99, 132, 0.4)',
+                borderWidth: 2,
+                adjustScaleRange: false,
+                label: {
+                    content: updates[time],
+                    display: labelDisplay,
+                    position: 'end'
+                },
+                interaction: {
+                },
+                enter: () => {toggleUpdateVisibility(id)},
+                leave: () => {toggleUpdateVisibility(id)},
+            };
+        }
+        return result;
+    }
+
+    function toggleUpdateVisibility(id) {
+        if (!options) return;
+        console.log("options", options);
+        setUpdateVisible((prevState) => {
+            if (prevState.includes(id)) {
+                return prevState.filter((item) => item !== id);
+            } else {
+                return [...prevState, id];
+            }
+        });
+    }
+
+    function addUpdateVisibility(id) {
+        setUpdateVisible((prevState) => {return [...prevState, id]});
+    }
+
 
     function getGridLineColor() {
         return [theme.palette.primary.main, "20"].join("");
@@ -97,6 +152,9 @@ const Graph = ({data, outputX}) => {
                         mode: "x",
                     },
                     
+                },
+                annotation: {
+                    annotations: produceLineAnnotation(updates),
                 }
             },
             scales: {
@@ -146,11 +204,36 @@ const Graph = ({data, outputX}) => {
         if (data === null) {
             return null;
         } else if (outputX === "date") {
-            return (<Line data={data} options={graphOptions(data)}></Line>);
+            return (<Line data={data} options={options}></Line>);
         } else {
-            return (<Scatter data={data} options={graphOptions(data)}></Scatter>);
+            return (<Scatter data={data} options={options}></Scatter>);
         }
     }
+
+    useEffect(() => {
+        setOptions(graphOptions(data));
+        console.log("setOptions");
+    }, [data, outputX, updates, updateVisible])
+
+    // useEffect(() => {
+    //     if (!options) return;
+    //     console.log("updateVisible", updateVisible);
+    //     let annotations = {...options.plugins.annotation.annotations};
+    //     let keys = Object.keys(annotations);
+    //     for (let i = 0; i < keys.length; i++) {
+    //         let key = keys[i];
+    //         if (updateVisible.includes(key)) {
+    //             annotations[key].label.display = false;
+    //         } else {
+    //             annotations[key].label.display = true;
+    //         }
+    //     }
+    //     setOptions({...options, plugins: {...options.plugins, annotation: {annotations: annotations}}});
+    // }, [updateVisible])
+
+    // useEffect(() => {
+    //     console.log("options", options);
+    // }, [options])
 
   return (
     <div>

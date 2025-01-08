@@ -6,6 +6,8 @@ import Graph from './Graph';
 import DatasetList from './DatasetList';
 import WikiInfoCard from './WikiInfoCard';
 import RecentDataTable from './RecentDataTable';
+import VehicleGraph from './VehicleGraph';
+import NationGraph from './NationGraph';
 
 const DisplayPanel = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -67,6 +69,26 @@ const GraphLayout = ({Selector}) => {
         return selectedVehicleName;
     }
 
+    function additionalInfo() {
+        if (Selector === VehicleGraph) {
+            return (
+                <Grid container spacing={5} sx={{mt: 4}}>
+                    <Grid item size={{xs: 12, md: 6}}>
+                        <WikiInfoCard vehicleName={getVehicleName()}/>
+                    </Grid>
+                    <Grid item size={{xs: 12, md: 6}}>
+                        <RecentDataTable vehicleName={getVehicleName()}/>
+                    </Grid>
+                </Grid>
+            )
+        } else if (Selector === NationGraph) {
+            return (
+                <p>placeholder</p>
+            )
+        }
+        return;
+    }
+
   return (
     <>
         <Box mx={10}>
@@ -102,14 +124,7 @@ const GraphLayout = ({Selector}) => {
                     <Graph data={data} outputX={outputX}></Graph>
                 </Paper>
             </Box>
-            <Grid container spacing={5} sx={{mt: 4}}>
-                <Grid item size={{xs: 12, md: 6}}>
-                    <WikiInfoCard vehicleName={getVehicleName()}/>
-                </Grid>
-                <Grid item size={{xs: 12, md: 6}}>
-                    <RecentDataTable vehicleName={getVehicleName()}/>
-                </Grid>
-            </Grid>
+            {additionalInfo()}
         </Box>
         <Snackbar
             open={dataSavedBarOpen}
