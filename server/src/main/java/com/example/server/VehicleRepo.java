@@ -48,4 +48,7 @@ public interface VehicleRepo extends MongoRepository<Vehicle, ObjectId> {
 
     @Aggregation(pipeline = {"{$match: {'name': ?0}}", "{$sort: {'date': -1}}", "{$limit: 1}"})
     Vehicle mostRecentData(String name);
+
+    @Aggregation(pipeline = {"{$sort: {'date': -1}}", "{$group: {'_id': null, latestDate: {$first: '$date'}}}", "{$lookup: {from: 'joined', localField: 'latestDate', foreignField: 'date', as: 'latestDocs'}}", "{$unwind: {path: '$latestDocs'}}", "{$replaceRoot: {newRoot: '$latestDocs'}}","{$match: {'nation': ?0, cls: ?1}}", "{$project: {name: 1, wk_name: 1, matchSum: {$add: ['$ab_battles', '$rb_battles', '$sb_battles']}}}", "{$sort: {matchSum: -1}}", "{$limit: 10}", "{$project: {name: 1, label: '$wk_name'}}"})
+    List<VehicleName> mostPlayedVehicleList(String nation, String cls);
 }

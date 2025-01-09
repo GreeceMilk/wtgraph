@@ -121,5 +121,10 @@ public class Controller {
 		return new ResponseEntity<>(scraper.scrapeEvent(), HttpStatus.OK);	
 	}
 	
+	@GetMapping("/mostPlayedVehicleList") 
+	public ResponseEntity<List<VehicleName>> getMostPlayedVehicleList(@RequestParam String nation, @RequestParam String cls) {
+		return new ResponseEntity<>(vehicleService.mostPlayedVehicleList(nation, cls), HttpStatus.OK);	
+	}
+	
 	
 }

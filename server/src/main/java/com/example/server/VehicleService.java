@@ -78,4 +78,8 @@ public class VehicleService {
     Vehicle mostRecentData(String name) {
         return vehicleRepo.mostRecentData(name);
     }
+
+    List<VehicleName> mostPlayedVehicleList(String nation, String cls) {
+        return vehicleRepo.mostPlayedVehicleList(nation, cls);
+    }
 }
