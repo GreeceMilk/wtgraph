@@ -55,6 +55,15 @@ const GraphLayout = ({Selector}) => {
       }
     }, [])
     
+    useEffect(() => {
+        setData({datasets: []});
+        setOutputX(null);
+        setDataSetName("");
+        setIsDataSetNameDisabled(true);
+        setDataSavedBarOpen(false);
+        setSelectedVehicleName(null);
+    }, [Selector])
+    
 
     function switchVisibility(id) {
         setData({datasets: data.datasets.map((data) => {
