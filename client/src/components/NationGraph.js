@@ -52,7 +52,7 @@ const NationGraph = ({data, setData, outputX, setOutputX, setDataSetName, setIsD
                     data: response.data,
                     saved: false,
                     hidden: false,
-                    vehicleName: nation,
+                    vehicleName: {nation: nation, cls: cls},
                 };
                 if (data.datasets.length === 0 || data.datasets[data.datasets.length - 1].saved) {
                     setData({datasets: [...data.datasets, temp]});

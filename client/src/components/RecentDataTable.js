@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 import api from '../api/axiosConfig';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';   
+import VehicleGraph from './VehicleGraph';
+import NationGraph from './NationGraph';
 
 import { areAllObjectsValid } from '../Util';
 
@@ -14,8 +16,9 @@ function handleValue(value) {
     return value;   
 }
 
-const CollapsableRow = ({ groupName, keys, data }) => {
+const CollapsableRow = ({ groupName, data }) => {
     const [open, setOpen] = React.useState(false);  
+    const keys = Object.keys(data);
     return (
     <React.Fragment>
             <TableRow sx={{'& > *': {borderBottom: 'unset'}}}>
@@ -54,15 +57,29 @@ const CollapsableRow = ({ groupName, keys, data }) => {
     );
 }
 
-const RecentDataTable = ({vehicleName}) => {
+const RecentDataTable = ({inputName, Selector}) => {
     const [recentData, setRecentData] = React.useState(null);
     const [loading, setLoading] = React.useState(true);
+    const vehicleUrl = "/api/mostRecentVehicleData";
+    const nationUrl = "/api/mostRecentNationData";  
 
-    async function getRecentData() {
-        if (areAllObjectsValid([vehicleName])) {
+    async function getRecentVehicleData() {
+        if (areAllObjectsValid([inputName])) {
             try {
-                const response = await api.get("/api/mostRecentVehicleData", {params: {name: vehicleName}});
-                setRecentData(response.data);
+                const response = await api.get(vehicleUrl, {params: {name: inputName}});
+                const data = response.data;
+                const keys = Object.keys(data).filter((key) => key !== "wk_name" && key !== "id");
+                const abKeys = keys.filter((key) => key.includes("ab"));
+                const rbKeys = keys.filter((key) => key.includes("rb"));
+                const sbKeys = keys.filter((key) => key.includes("sb"));
+                const otherKeys = keys.filter((key) => !abKeys.includes(key) && !rbKeys.includes(key) && !sbKeys.includes(key));
+                setRecentData({
+                    name: data.wk_name,
+                    ab: formatVehicleData(abKeys, data),
+                    rb: formatVehicleData(rbKeys, data),
+                    sb: formatVehicleData(sbKeys, data),
+                    other: formatVehicleData(otherKeys, data),
+                })
                 setLoading(false);
                 console.log("RecentData: ", recentData);  
             } catch (error) {
@@ -71,46 +88,71 @@ const RecentDataTable = ({vehicleName}) => {
         }
     }
 
+    async function getRecentNationData() {
+        if (areAllObjectsValid([inputName])) {
+            try {
+                const response = await api.get(nationUrl, {params: {nation: inputName}});
+                const data = response.data;
+                for (let key in data) {
+                    delete data[key].id;
+                }
+                setRecentData(data)
+                setLoading(false);
+                // console.log("RecentData: ", recentData);  
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    }
+
+    function formatVehicleData(keys, data) {
+        let result = {};
+        keys.forEach((key) => {
+            result[key] = data[key];
+        });
+        return result;
+    }
+
 
     function dataTable() {
-        const keys = Object.keys(recentData).filter((key) => key !== "wk_name" && key !== "id");
-        const abKeys = keys.filter((key) => key.includes("ab"));
-        const rbKeys = keys.filter((key) => key.includes("rb"));
-        const sbKeys = keys.filter((key) => key.includes("sb"));
-        const otherKeys = keys.filter((key) => !abKeys.includes(key) && !rbKeys.includes(key) && !sbKeys.includes(key));
+        // const keys = Object.keys(recentData).filter((key) => key !== "wk_name" && key !== "id");
+        // const abKeys = keys.filter((key) => key.includes("ab"));
+        // const rbKeys = keys.filter((key) => key.includes("rb"));
+        // const sbKeys = keys.filter((key) => key.includes("sb"));
+        // const otherKeys = keys.filter((key) => !abKeys.includes(key) && !rbKeys.includes(key) && !sbKeys.includes(key));
         return (
                 <Table size='small'>
                     <caption>
-                        The most recent data for the {vehicleName}
+                        The most recent data for the {inputName}
                     </caption>
                     <TableHead>
                         <TableRow>
                             <TableCell/>
                             <TableCell>Vehicle Name</TableCell>
-                            <TableCell>{recentData?.wk_name}</TableCell>
+                            <TableCell>{recentData?.name}</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {otherKeys.map((key) => {
+                        {recentData?.other ? Object.keys(recentData.other).map((key) => {
                             return (
                                 <TableRow>
                                     <TableCell/>
                                     <TableCell>{key.replaceAll("_", " ")}</TableCell>
-                                    <TableCell>{handleValue(recentData[key]).toString().replaceAll("_", " ")}</TableCell>
+                                    <TableCell>{handleValue(recentData?.other[key]).toString().replaceAll("_", " ")}</TableCell>
                                 </TableRow>
                             )
-                        })}
-                        <CollapsableRow groupName="AB Stats" keys={abKeys} data={recentData} />
-                        <CollapsableRow groupName="RB Stats" keys={rbKeys} data={recentData} />
-                        <CollapsableRow groupName="SB Stats" keys={sbKeys} data={recentData} />
+                        }): null}
+                        <CollapsableRow groupName="AB Stats" data={recentData?.ab} />
+                        <CollapsableRow groupName="RB Stats" data={recentData?.rb} />
+                        <CollapsableRow groupName="SB Stats" data={recentData?.sb} />
                     </TableBody>
                 </Table>
         )
     }
     
     function chooseDisplayContent() {
-        console.log("VehicleName: ", vehicleName);
-        if (vehicleName === null || vehicleName === undefined) {
+        console.log("VehicleName: ", inputName);
+        if (inputName === null || inputName === undefined) {
             return (
                 <Typography>
                     Please select a vehicle
@@ -133,9 +175,13 @@ const RecentDataTable = ({vehicleName}) => {
 
     useEffect(() => {
         setLoading(true);
-        getRecentData();
+        if (Selector === VehicleGraph) {
+            getRecentVehicleData();
+        } else if (Selector === NationGraph) {
+            getRecentNationData();
+        }
     
-    }, [vehicleName])
+    }, [inputName])
     
 
   return (

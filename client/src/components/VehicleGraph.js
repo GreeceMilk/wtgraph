@@ -2,18 +2,20 @@ import React, { useEffect, useState } from 'react';
 import api from '../api/axiosConfig.js';
 import "chartjs-adapter-date-fns";
 import {v4 as uuidv4} from 'uuid'
+import { useSearchParams } from 'react-router-dom';
 
 import {modes, convertSpaceToSnake, areAllObjectsValid} from '../Util.js';
 
 import { Box, TextField, Autocomplete, Slider, Grid2 as Grid, FormControl, InputLabel, OutlinedInput, Divider } from '@mui/material';
 
 const VehicleGraph = ({data, setData, outputX, setOutputX, setDataSetName, setIsDataSetNameDisabled}) => {
-    // const [data, setData] = useState({datasets:[]});
+    // TODO: Implement searchParams
+    // const [searchParams] = useSearchParams();
+    // const vehicleToSearch = {name: searchParams.get("name"), label: searchParams.get("label")};
     const [mode, setMode] = useState("rb");
 
     const [nation, setNation] = useState("USA");
     const [nationList, setNationList] = useState([]);
-    // const [isNationDisabled, setIsNationDisabled] = useState(true);
 
     const [cls, setCls] = useState("Ground_vehicles");
     const [isClsDisabled, setIsClsDisabled] = useState(true);
@@ -23,8 +25,8 @@ const VehicleGraph = ({data, setData, outputX, setOutputX, setDataSetName, setIs
     const [brList, setBrList] = useState([]);
     const [isBrListDisabled, setIsBrListDisabled] = useState(true);
 
-    const [vehicle, setVehicle] = useState(null);
     const [isVehicleDisabled, setIsVehicleDisabled] = useState(true);
+    const [vehicle, setVehicle] = useState(null);
     const [vehicleList, setVehicleList] = useState([]);
     const [isVehicleListLoading, setIsVehicleListLoading] = useState(false);
 

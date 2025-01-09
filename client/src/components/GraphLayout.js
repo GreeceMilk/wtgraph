@@ -8,6 +8,8 @@ import WikiInfoCard from './WikiInfoCard';
 import RecentDataTable from './RecentDataTable';
 import VehicleGraph from './VehicleGraph';
 import NationGraph from './NationGraph';
+import MostPlayedVehicleList from './MostPlayedVehicleList';
+import { set } from 'date-fns';
 
 const DisplayPanel = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -24,6 +26,7 @@ const GraphLayout = ({Selector}) => {
     const [isDataSetNameDisabled, setIsDataSetNameDisabled] = useState(true);
     const [dataSavedBarOpen, setDataSavedBarOpen] = useState(false);
     const [selectedVehicleName, setSelectedVehicleName] = useState(null);
+    const [selectedNationCls, setSelectedNationCls] = useState(null);
 
     function saveDataset() {
         if (data && data.datasets.length > 0) {
@@ -54,7 +57,7 @@ const GraphLayout = ({Selector}) => {
         setSelectedVehicleName(null);
       }
     }, [])
-    
+
     useEffect(() => {
         setData({datasets: []});
         setOutputX(null);
@@ -62,6 +65,7 @@ const GraphLayout = ({Selector}) => {
         setIsDataSetNameDisabled(true);
         setDataSavedBarOpen(false);
         setSelectedVehicleName(null);
+        setSelectedNationCls(null);
     }, [Selector])
     
 
@@ -74,8 +78,33 @@ const GraphLayout = ({Selector}) => {
         })});
     }
 
-    function getVehicleName() {
-        return selectedVehicleName;
+    function getSelectedVehicle() {
+        if (Selector === VehicleGraph && typeof selectedVehicleName === "string") {
+            return selectedVehicleName;
+        }
+        return null;
+    }
+
+    function getSelectedNation(){
+        if (Selector === NationGraph) {
+            return selectedNationCls?.nation;
+        }
+        return null;
+    }
+
+    function getSelectedCls() {
+        if (Selector === NationGraph) {
+            return selectedNationCls?.cls;
+        }
+        return null;
+    }
+
+    function selectionMethod() {
+        if (Selector === VehicleGraph) {
+            return setSelectedVehicleName;
+        } else {
+            return setSelectedNationCls;
+        }
     }
 
     function additionalInfo() {
@@ -83,16 +112,23 @@ const GraphLayout = ({Selector}) => {
             return (
                 <Grid container spacing={5} sx={{mt: 4}}>
                     <Grid item size={{xs: 12, md: 6}}>
-                        <WikiInfoCard vehicleName={getVehicleName()}/>
+                        <WikiInfoCard vehicleName={getSelectedVehicle()}/>
                     </Grid>
                     <Grid item size={{xs: 12, md: 6}}>
-                        <RecentDataTable vehicleName={getVehicleName()}/>
+                        <RecentDataTable inputName={getSelectedVehicle()} Selector={Selector}/>
                     </Grid>
                 </Grid>
             )
         } else if (Selector === NationGraph) {
             return (
-                <p>placeholder</p>
+                <Grid container spacing={5} sx={{mt: 4}}>
+                    <Grid item size={{xs: 12, md: 6}}>
+                        <MostPlayedVehicleList nation={getSelectedNation()} cls={getSelectedCls()}/>
+                    </Grid>
+                    <Grid item size={{xs: 12, md: 6}}>
+                        <RecentDataTable inputName={getSelectedNation()} Selector={Selector}/>
+                    </Grid>
+                </Grid>
             )
         }
         return;
@@ -113,7 +149,7 @@ const GraphLayout = ({Selector}) => {
                     <Box sx={{height: '100%'}}>
                         <DisplayPanel variant="outlined">
                             <Typography variant='h5' color='secondary.dark' sx={{pl: 2, textAlign: "left"}}>Dataset List</Typography>
-                            <DatasetList datasets={data.datasets} switchVisibility={switchVisibility} deleteItem={deleteItem} setSelectedVehicleName={setSelectedVehicleName}/>
+                            <DatasetList datasets={data.datasets} switchVisibility={switchVisibility} deleteItem={deleteItem} setSelectedVehicleName={selectionMethod()}/>
                         </DisplayPanel>
                     </Box>
                 </Grid>
