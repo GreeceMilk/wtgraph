@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import api from '../api/axiosConfig.js';
-import {Chart, registerables} from 'chart.js';
-import "chartjs-adapter-date-fns";
-import autocolors from 'chartjs-plugin-autocolors';
 import {v4 as uuidv4} from 'uuid';
 import {modes, brRanges, outputListNation as outputList, areAllObjectsValid} from '../Util.js';
 
@@ -21,8 +18,6 @@ import { Box, TextField, Autocomplete, Grid2 as Grid } from '@mui/material';
 //     "ground_frags_per_death",
 //     "air_frags_per_battle",
 //     "air_frags_per_death"]
-
-Chart.register(...registerables, autocolors);
 
 const NationGraph = ({data, setData, outputX, setOutputX, setDataSetName, setIsDataSetNameDisabled}) => {
     const [mode, setMode] = useState(null);
@@ -57,13 +52,12 @@ const NationGraph = ({data, setData, outputX, setOutputX, setDataSetName, setIsD
                     data: response.data,
                     saved: false,
                     hidden: false,
+                    vehicleName: nation,
                 };
                 if (data.datasets.length === 0 || data.datasets[data.datasets.length - 1].saved) {
                     setData({datasets: [...data.datasets, temp]});
                 } else {
-                    let tempData = data.datasets;
-                    tempData[tempData.length - 1] = temp;
-                    setData({datasets: tempData});
+                    setData({datasets: [...data.datasets.slice(0, data.datasets.length - 1), temp]});
                 }
                 console.log("Data received: ", response.data);
             } catch (error) {
@@ -133,7 +127,7 @@ const NationGraph = ({data, setData, outputX, setOutputX, setDataSetName, setIsD
     useEffect(() => {
       setOutputX("date");
     
-    }, [])
+    })
     
 
     useEffect(() => { 
@@ -207,61 +201,6 @@ const NationGraph = ({data, setData, outputX, setOutputX, setDataSetName, setIsD
         }
     }, [data])
 
-    const options = {
-        parsing: {
-            xAxisKey: "date", 
-            yAxisKey: "ydata",
-        },
-        plugins: {
-            title: {
-                display: true,
-                text: "test",
-            },
-            autocolors,
-        },
-        scales: {
-            x: {
-                // border: {
-                //     color: "#d4d4d4",
-                // },
-                // ticks: {
-                //     color: "#d4d4d4",
-                // },
-                type: "time",
-                time: {
-                    // parser: "yyyy-MM-dd",
-                    // displayFormats: {
-                    //     day: "yy-MM-dd",
-                    // },
-                    unit: "month",
-                    tooltipFormat: "yy-MM-dd",
-                },
-                // title: {
-                //     display: true,
-                //     text: "Date",
-                // }
-                // ticks: {
-                //     source: "data",
-                // },
-            },
-            y: {
-                // suggestedMin: 0,
-                // suggestedMax: 13,
-                border: {
-                    color: "#d4d4d4",
-                },
-                ticks: {
-                    color: "#d4d4d4",
-                },
-            },
-        },
-        elements: {
-            point: {
-                pointStyle: false,
-            },
-        },
-        // clip: 2,
-    }
     return (
         <Box>
             <Grid container spacing={2} direction={'column'}>

@@ -26,7 +26,7 @@ const Graph = ({data, outputX}) => {
     const [showAllAnnotations, setShowAllAnnotations] = useState(false);
     const [updateVisible, setUpdateVisible] = useState([]);
     const [options, setOptions] = useState(null);
-    const [GraphType, setGraphType] = useState(null);
+    const [ChartComponent, setChartComponent] = useState(null);
     const updates = useContext(UpdateInfoContext);
 
     function produceLineAnnotation(updates) {
@@ -191,20 +191,20 @@ const Graph = ({data, outputX}) => {
             },
             animation: false,
             interaction: {
-                mode: "index",
-                intersect: false
+                mode: "nearest",
+                intersect: false,
             }, 
             // clip: 2,
         };
     }
 
-    function chooseGraph(data, outputX) {
+    function chooseGraph() {
         if (data === null) {
-            setGraphType(null);
+            return;
         } else if (outputX === "date") {
-            setGraphType(Line);
+            return (<Line data={data} options={options}></Line>);
         } else {
-            setGraphType(Scatter);
+            return (<Scatter data={data} options={options}></Scatter>);
         }
     }
 
@@ -214,8 +214,12 @@ const Graph = ({data, outputX}) => {
     }, [data, outputX, updates, updateVisible, enablePan, enableZoom, enableAnnotation, XGridChecked, YGridChecked, enableAnnotation, showAllAnnotations])
 
     useEffect(() => {
-        chooseGraph(data, outputX);
-    }, [data, outputX])
+        setChartComponent(chooseGraph());
+    }, [data, outputX, options])
+
+    useEffect(() => {
+        console.log("options", options);
+    }, [options])
 
 
     // useEffect(() => {
@@ -240,7 +244,7 @@ const Graph = ({data, outputX}) => {
 
   return (
     <div>
-        {GraphType?<GraphType data={data} options={options}></GraphType>:null}
+        {ChartComponent}
         <Box>
             <FormGroup row={true} sx={{justifyContent: 'center', mt: 2}}>
                 <FormControlLabel control={<Switch color='secondary' checked={XGridChecked} onChange={(event, value) => setXGridChecked(value)}/>} label="X Grid"  labelPlacement='bottom'/>

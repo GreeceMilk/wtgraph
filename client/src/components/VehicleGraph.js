@@ -193,7 +193,7 @@ const VehicleGraph = ({data, setData, outputX, setOutputX, setDataSetName, setIs
     }, [outputY, vehicle])
 
     useEffect(() => {
-        if (data.datasets.length > 0 && !data.datasets[data.datasets.length - 1].saved) {
+        if (data.datasets.length > 0 && !data.datasets[data.datasets.length - 1].saved && vehicle) {
             setIsDataSetNameDisabled(false);
             setDataSetName(vehicle.label+" "+outputX+" "+outputY);
         } else {
