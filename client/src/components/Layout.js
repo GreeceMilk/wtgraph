@@ -1,7 +1,7 @@
 import React from 'react';
 import {Outlet} from 'react-router-dom';    
 import NavBar from './NavBar';
-import { Box } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import ScrollToTop from './ScrollToTop';
 
 const Layout = () => {
@@ -9,7 +9,9 @@ const Layout = () => {
   return (
     <main>
       <NavBar />
-      <Outlet />
+      <Box sx={{ml: 4, mr: 4}}>
+        <Outlet />
+      </Box>
       <ScrollToTop />
       <Box sx={{height: '100px'}}></Box>
     </main>

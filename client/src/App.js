@@ -147,16 +147,16 @@ function App() {
   return (
       <ThemeProvider theme={theme}>
         <CssBaseline/>
-    <UpdateInfoContext.Provider value={updates}>
-        <div className="App">
-          <Routes>
-            <Route path="/" element = {<Layout/>}>
-              <Route path="/" element={<Home data={homeData} wkName={homeWkName} outputX={homeOutputX} outputY={homeOutputY}/>}> </Route>
-              <Route path="/nation" element={<GraphLayout Selector={NationGraph}/>}></Route>
-              <Route path="/vehicle" element={<GraphLayout Selector={VehicleGraph}/>}></Route>
-            </Route>
-          </Routes>
-        </div>
+        <UpdateInfoContext.Provider value={updates}>
+          <div className="App">
+            <Routes>
+              <Route path="/" element = {<Layout/>}>
+                <Route path="/" element={<Home data={homeData} wkName={homeWkName} outputX={homeOutputX} outputY={homeOutputY}/>}> </Route>
+                <Route path="/nation" element={<GraphLayout Selector={NationGraph}/>}></Route>
+                <Route path="/vehicle" element={<GraphLayout Selector={VehicleGraph}/>}></Route>
+              </Route>
+            </Routes>
+          </div>
         </UpdateInfoContext.Provider>
       </ThemeProvider>
   )
