@@ -129,7 +129,11 @@ function App() {
   const getRandomData = async () => {
       try {
         const response = await api.get('/api/randomVehicleData');
-        let temp = {data: response.data.vehicleData};
+        let temp = {
+          data: response.data.vehicleData,
+          label: "Random Vehicle Data",
+          id: "randomVehicleData",
+        };
         setHomeWkName(response.data.vehicleName.label);
         setHomeData({datasets: [temp]});
         setHomeOutputX(response.data.outputX);
