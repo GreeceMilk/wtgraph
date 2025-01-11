@@ -10,6 +10,7 @@ import VehicleGraph from './VehicleGraph';
 import NationGraph from './NationGraph';
 import MostPlayedVehicleList from './MostPlayedVehicleList';
 import { set } from 'date-fns';
+import PageTitle from './PageTitle';
 
 const DisplayPanel = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -136,7 +137,8 @@ const GraphLayout = ({Selector}) => {
 
   return (
     <>
-        <Box mx={10}>
+        <Box>
+            <PageTitle text={Selector === VehicleGraph ? "Tracking performance for individual vehicle" : "Win rate, matched played, and other metrics for nations"}/>
             <Grid container spacing={5}>
                 <Grid item size={{xs: 12, md: "auto"}}>
                     <DisplayPanel variant='outlined'>
