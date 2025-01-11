@@ -1,16 +1,25 @@
 import { Box, Slide, Typography, useScrollTrigger } from '@mui/material';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
+const defaultHeight = 84;
 
 const PageTitle = ({text}) => {
-const trigger = useScrollTrigger({threshold: 5});
+  const [height, setHeight] = useState(defaultHeight);
+
+  function updateHeight() {
+    setHeight(Math.max(0, defaultHeight - window.scrollY));
+  }
+
+  useEffect(() => {
+  window.addEventListener('scroll', updateHeight);
+  return () => {
+      window.removeEventListener('scroll', updateHeight);
+  };
+  }, [])
   return (
-    // <HideOnScroll>
-    <Box sx={{height: trigger? '0px':'80px', transition: 'height 0.2s ease-in-out', alignContent: 'center', mb: 2, overflow: 'hidden'}}>
+    <Box sx={{maxHeight: `${defaultHeight}px`, height: `${height}px`, alignContent: 'center', mb: 2, overflow: 'hidden'}}>
         <Typography variant='h4'>{text}</Typography>
     </Box>
-
-    // </HideOnScroll>
   )
 }
 
