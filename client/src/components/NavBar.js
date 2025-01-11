@@ -65,7 +65,7 @@ const NavBar = () => {
                           <Button variant='text' disableRipple color='secondary'>WTGRAPH</Button>
                         </NavLink>
                       </Grid>
-                      <Grid item sx={{ display: {xs: 'none', md: 'flex'}}}>
+                      <Grid item sx={{ display: 'flex'}}>
                           <NavLink to='/nation'>
                             <Button variant='text' color="secondary">Nation</Button>
                           </NavLink>
