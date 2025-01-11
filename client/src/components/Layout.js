@@ -10,6 +10,7 @@ const Layout = () => {
   return (
     <main>
       <NavBar />
+      <Box sx={{height: '72px'}}></Box>
       <Box sx={{ml: 4, mr: 4}}>
         <Outlet />
       </Box>
