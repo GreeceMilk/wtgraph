@@ -3,6 +3,7 @@ import {Outlet} from 'react-router-dom';
 import NavBar from './NavBar';
 import { Box, Container } from '@mui/material';
 import ScrollToTop from './ScrollToTop';
+import Footer from './Footer';
 
 const Layout = () => {
 
@@ -14,6 +15,7 @@ const Layout = () => {
       </Box>
       <ScrollToTop />
       <Box sx={{height: '100px'}}></Box>
+      <Footer />
     </main>
   );
 }

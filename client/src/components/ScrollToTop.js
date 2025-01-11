@@ -6,7 +6,7 @@ import { Fab, Fade } from '@mui/material';
 
 const StyledFab = styled(Fab)(({ theme }) => ({
     position: 'fixed',
-    bottom: theme.spacing(4),
+    bottom: theme.spacing(8),
     right: theme.spacing(4),
 }));
 
