@@ -27,8 +27,9 @@ const ImageDisplay = ({image, mainText, subText}) => {
             alignItems: 'center',
             alignContent: 'center',
             display: 'flex',
-            flexDirection: 'column'}}>
-                <Typography variant='h3' color='secondary'>{mainText}</Typography>
+            flexDirection: 'column',
+            pt: 2}}>
+                <Typography variant='h3' color='secondary.light'>{mainText}</Typography>
                 <Fade in={hover}>
                     <Typography variant='h5' color='secondary'>{subText}</Typography>
                 </Fade>
