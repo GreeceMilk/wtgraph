@@ -22,6 +22,7 @@ import com.example.server.scrape.WikiData;
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://gray-meadow-0592c7d00.4.azurestaticapps.net/")
 public class Controller {
     @Autowired
     private NationService nationService;
