@@ -258,7 +258,7 @@ const NationGraph = ({data, setData, outputX, setOutputX, setDataSetName, setIsD
                     <Autocomplete
                         value={lowerBr}
                         disabled={isLowerBrDisabled}
-                        id='cls'
+                        id='lowerBr'
                         options={lowerBrList}
                         onChange={(event, newValue) => {
                             setLowerBr(newValue);

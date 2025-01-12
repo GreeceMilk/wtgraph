@@ -23,12 +23,12 @@ const Home = ({data, wkName, outputX, outputY}) => {
       </Paper>
       <Grid container spacing={4} sx={{mt: 4}}>
         <Grid item size={{xs: 12, md: 6}}>
-          <NavLink to='/nation'>
+          <NavLink to='/nation' id='imageToNation'>
             <ImageDisplay image={nationbg} mainText={"Nation Graph"} subText={"Check out recent data about individual nations"}/>
           </NavLink>
         </Grid>
         <Grid item size={{xs: 12, md: 6}}>
-          <NavLink to='/vehicle'>
+          <NavLink to='/vehicle' id='imageToVehicle'>
             <ImageDisplay image={vehiclebg} mainText={"Vehicle Graph"} subText={"Interested in vehicle data? Click here"}/>
           </NavLink>
         </Grid>

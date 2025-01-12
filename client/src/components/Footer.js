@@ -12,7 +12,7 @@ const Footer = () => {
   }));
 
   return (
-    <AppBar position='static'>
+    <AppBar position='static' id='footer'>
         <Toolbar variant='dense' sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%'}}>
         <Grid container sx={{width: '100%'}}>
           <Grid item size={{xs: 10, md:'grow'}} sx={{ alignContent: 'center'}}>

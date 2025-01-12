@@ -247,11 +247,11 @@ const Graph = ({data, outputX}) => {
         {ChartComponent}
         <Box>
             <FormGroup row={true} sx={{justifyContent: 'center', mt: 2}}>
-                <FormControlLabel control={<Switch color='secondary' checked={XGridChecked} onChange={(event, value) => setXGridChecked(value)}/>} label="X Grid"  labelPlacement='bottom'/>
-                <FormControlLabel control={<Switch color='secondary' checked={YGridChecked} onChange={(event, value) => setYGridChecked(value)}/>} label="Y Grid"  labelPlacement='bottom'/>
-                <FormControlLabel control={<Switch color='secondary' checked={enablePan} onChange={(event, value) => {setEnablePan(value); setEnableZoom(value);}}/>} label="Enable Pan/Zoom"  labelPlacement='bottom'/>
-                <FormControlLabel control={<Switch color='secondary' checked={enableAnnotation} onChange={(event, value) => {setEnableAnnotation(value);}}/>} label="Enable annotation"  labelPlacement='bottom'/>
-                <FormControlLabel control={<Switch color='secondary' checked={showAllAnnotations} onChange={(event, value) => {setShowAllAnnotations(value);}}/>} label="Show all annotations label"  labelPlacement='bottom'/>
+                <FormControlLabel control={<Switch id='XGridSwitch' color='secondary' checked={XGridChecked} onChange={(event, value) => setXGridChecked(value)}/>} label="X Grid"  labelPlacement='bottom'/>
+                <FormControlLabel control={<Switch id='YGridSwitch' color='secondary' checked={YGridChecked} onChange={(event, value) => setYGridChecked(value)}/>} label="Y Grid"  labelPlacement='bottom'/>
+                <FormControlLabel control={<Switch id='PanZoomSwitch' color='secondary' checked={enablePan} onChange={(event, value) => {setEnablePan(value); setEnableZoom(value);}}/>} label="Enable Pan/Zoom"  labelPlacement='bottom'/>
+                <FormControlLabel control={<Switch id='AnnotationSwitch' color='secondary' checked={enableAnnotation} onChange={(event, value) => {setEnableAnnotation(value);}}/>} label="Enable annotation"  labelPlacement='bottom'/>
+                <FormControlLabel control={<Switch id='ShowAnnotationSwitch' color='secondary' checked={showAllAnnotations} onChange={(event, value) => {setShowAllAnnotations(value);}}/>} label="Show all annotations label"  labelPlacement='bottom'/>
             </FormGroup>
         </Box>
     </div>

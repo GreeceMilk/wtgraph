@@ -282,6 +282,7 @@ const VehicleGraph = ({data, setData, outputX, setOutputX, setDataSetName, setIs
                         }
                     }}>BR</Divider>
                     <Slider
+                        id='brSlider'
                         disabled={isBrListDisabled}
                         step={null}
                         marks={isBrListDisabled?null:brList.map((element) => {return {value: parseFloat(element)}})}
