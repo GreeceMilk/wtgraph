@@ -1,6 +1,9 @@
 package com.example.server.scrape;
 
 import org.springframework.stereotype.Service;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -279,10 +282,11 @@ public class Scraper {
         options.addArguments("--headless");
         options.addArguments("--disable-gpu");
         options.addArguments("--window-size=1920,1080");
+        options.addArguments("--no-sandbox");
 
         // options.setBinary("C:\\Program Files\\Mozilla Firefox\\firefox.exe");
         try {
-            // String driverPath = "";
+            String driverPath = "/home/site/wwwroot/target/drivers/chromedriver-linux64/chromedriver";
             // String os = System.getProperty("os.name").toLowerCase();
             // String driversDir = Scraper.class.getClassLoader().getResource("drivers").getPath();
 
@@ -291,7 +295,8 @@ public class Scraper {
             // } else if (os.contains("nix") || os.contains("nux")) {
             //     driverPath = driversDir + "/chromedriver-linux64/chromedriver";
             // }
-            // System.setProperty("webdriver.chrome.driver", driverPath);
+            System.setProperty("webdriver.chrome.driver", driverPath);
+            // WebDriverManager.chromedriver().setup();
             WebDriver driver = new ChromeDriver(options);
             driver.get(eventUrl);
             driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
