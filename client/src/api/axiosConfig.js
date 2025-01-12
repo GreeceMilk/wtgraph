@@ -1,6 +1,6 @@
 import axios from 'axios';
 
 export default axios.create({
-    baseURL: 'http://localhost:8080',
+    baseURL: 'wtgraph-fjgcb0gzgabsbpcw.canadacentral-01.azurewebsites.net',
     headers: { "ngrok-skip-browser-warning": "true" }
 });
