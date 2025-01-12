@@ -282,7 +282,16 @@ public class Scraper {
 
         // options.setBinary("C:\\Program Files\\Mozilla Firefox\\firefox.exe");
         try {
-            System.setProperty("webdriver.chrome.driver",System.getenv("HOME") + "/site/wwwroot/drivers/chromedriver-linux64/chromedriver");
+            // String driverPath = "";
+            // String os = System.getProperty("os.name").toLowerCase();
+            // String driversDir = Scraper.class.getClassLoader().getResource("drivers").getPath();
+
+            // if (os.contains("win")) {
+            //     driverPath = driversDir + "/chromedriver-win64/chromedriver.exe";
+            // } else if (os.contains("nix") || os.contains("nux")) {
+            //     driverPath = driversDir + "/chromedriver-linux64/chromedriver";
+            // }
+            // System.setProperty("webdriver.chrome.driver", driverPath);
             WebDriver driver = new ChromeDriver(options);
             driver.get(eventUrl);
             driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
