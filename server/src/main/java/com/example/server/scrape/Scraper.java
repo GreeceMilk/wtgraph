@@ -282,7 +282,7 @@ public class Scraper {
 
         // options.setBinary("C:\\Program Files\\Mozilla Firefox\\firefox.exe");
         try {
-            System.setProperty("webdriver.chrome.driver", "drivers/chromedriver-win64/chromedriver.exe");
+            System.setProperty("webdriver.chrome.driver",System.getenv("HOME") + "/site/wwwroot/drivers/chromedriver-linux64/chromedriver");
             WebDriver driver = new ChromeDriver(options);
             driver.get(eventUrl);
             driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
