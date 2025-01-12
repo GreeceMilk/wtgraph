@@ -32,12 +32,6 @@ public class Controller {
 	@Autowired
 	private Scraper scraper;
 
-	@GetMapping("/nation")
-	public ResponseEntity<Optional<Nation>> getNation(@RequestParam String mode, @RequestParam String brRange, @RequestParam ObjectId id) {
-		Optional<Nation> returnValue = nationService.getNation(mode, brRange, id);
-		return new ResponseEntity<Optional<Nation>>(returnValue, returnValue.isEmpty()?HttpStatus.NO_CONTENT: HttpStatus.OK);
-	}
-
 	@GetMapping("/nationList")
 	public ResponseEntity<List<String>> getNationList(@RequestParam String mode, @RequestParam String brRange) {
 		return new ResponseEntity<List<String>>(nationService.getNationList(mode, brRange), HttpStatus.OK);

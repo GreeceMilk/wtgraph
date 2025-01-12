@@ -69,14 +69,14 @@ public class NationService {
         return repoMap.get(mode + brRange);
     }
 
-    public Optional<Nation> getNation(String mode, String brRange, ObjectId id) {
-        NationRepo<? extends Nation, ObjectId> repo = chooseDb(mode, brRange);
-        if (repo == null) {
-            return Optional.empty();
-        } else {
-            return copyOf(repo.findById(id));
-        }
-    }
+    // public Optional<Nation> getNation(String mode, String brRange, ObjectId id) {
+    //     NationRepo<? extends Nation, ObjectId> repo = chooseDb(mode, brRange);
+    //     if (repo == null) {
+    //         return Optional.empty();
+    //     } else {
+    //         return copyOf(((NationRepo<Nation, ObjectId>) repo).findById(id));
+    //     }
+    // }
 
     // utility function
     @SuppressWarnings("unchecked")  
