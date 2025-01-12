@@ -10,8 +10,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -275,12 +275,15 @@ public class Scraper {
 
     public Map<Date, String> scrapeEvent() {
         Map<Date, String> events = new LinkedHashMap<>();
-        FirefoxOptions options = new FirefoxOptions();
+        ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless");
-        options.setBinary("C:\\Program Files\\Mozilla Firefox\\firefox.exe");
+        options.addArguments("--disable-gpu");
+        options.addArguments("--window-size=1920,1080");
+
+        // options.setBinary("C:\\Program Files\\Mozilla Firefox\\firefox.exe");
         try {
-            System.setProperty("webdriver.gecko.driver", "C:\\wtgraph\\geckodriver.exe");
-            WebDriver driver = new FirefoxDriver(options);
+            System.setProperty("webdriver.chrome.driver", "src/main/resources/drivers/chromedriver-linux64/chromedriver");
+            WebDriver driver = new ChromeDriver(options);
             driver.get(eventUrl);
             driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
             List<WebElement> updates = driver.findElements(By.cssSelector("div[data-section=updates]"));
