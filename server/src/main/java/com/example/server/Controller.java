@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +25,13 @@ import com.example.server.scrape.WikiData;
 @CrossOrigin(origins = { "http://localhost:3000", 
 						"https://gray-meadow-0592c7d00.4.azurestaticapps.net/", 
 						"https://wtgraph.space", 
-						"https://www.wtgraph.space" })
+						"https://www.wtgraph.space" },
+			allowedHeaders = "*",
+			methods = {
+				RequestMethod.GET,
+				RequestMethod.POST,	
+				RequestMethod.OPTIONS
+			})
 public class Controller {
     @Autowired
     private NationService nationService;
